@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>堆快照监控内存</title>
+</head>
+<body>
+    <button id="btn">Add</button>
+    
+    <script>
+        // 新建 DOM，但是不把它放在界面中，而是使用一个变量进行引用
+        let temEle
+
+        function fn () {
+            let ul = document.createElement('ul')
+
+            for (let i = 0; i < 10; i++) {
+                let li = document.createElement('li')
+                ul.appendChild(li)
+            }
+            temEle = null
+        }
+        document.getElementById('btn').addEventListener('click', fn)
+    </script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>时间线记录内存变化</title>
+</head>
+<body>
+    <button id="btn">Add</button>
+    <script>
+        let arrList = []
+
+        function test () {
+            for (let i = 0; i < 100000; i++) {
+                document.body.appendChild(document.createElement('p'))
+            }
+            arrList.push(new Array(1000000).join('x'))
+            console.log(arrList);
+        }
+
+        document.getElementById('btn').addEventListener('click', test)
+        
+        function foo () {
+            var el = document.getElementById('btn')
+            el.onclick = function () {
+                console.log(el.id);
+            }
+            // el = null
+        }
+        foo()
+    </script>
+</body>
+</html>
