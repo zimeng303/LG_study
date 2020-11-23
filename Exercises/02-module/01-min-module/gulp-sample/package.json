@@ -1,9 +1,9 @@
 {
-  "name": "generator-alison-vue",
+  "name": "gulp-sample",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "yeoman-generator": "^4.12.0"
+    "gulp": "^4.0.2"
   }
 }

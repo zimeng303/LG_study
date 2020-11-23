@@ -1,9 +1,9 @@
 {
-  "name": "generator-alison-vue",
+  "name": "grunt-multi-task",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "yeoman-generator": "^4.12.0"
+    "grunt": "^1.3.0"
   }
 }
