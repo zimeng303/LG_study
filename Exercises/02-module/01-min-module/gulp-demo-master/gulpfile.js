@@ -156,8 +156,8 @@ const serve = () => {
 
 // 文件引用处理
 const useref = () => {
-    return src('temp/*.html', { base: 'dist' })
-            .pipe(plugins.useref({ searchPath: ['dist', '.'] }))
+    return src('temp/*.html', { base: 'temp' })
+            .pipe(plugins.useref({ searchPath: ['temp', '.'] }))
             // html js css 
             .pipe(plugins.if(/\.js$/, plugins.uglify()))
             .pipe(plugins.if(/\.css$/, plugins.cleanCss()))           
@@ -167,7 +167,7 @@ const useref = () => {
                 minifyCSS: true, // 压缩页面内的 style标签
                 minifyJS: true   // 压缩页面内的 script标签
             })))
-            .pipe(dest('temp'))
+            .pipe(dest('dist'))
 }
 
 // 创建并行任务，完成 src目录下面需要编译的文件

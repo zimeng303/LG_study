@@ -1,5 +1,5 @@
 {
-  "name": "gulp-pages",
+  "name": "alisone-gulp-pages",
   "version": "1.0.0",
   "description": "static web app workflow",
   "main": "lib/index.js",
