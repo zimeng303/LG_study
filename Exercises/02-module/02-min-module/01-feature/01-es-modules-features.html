@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ES Modules - 模块的特性</title>
+</head>
+<body>
+    <!-- 通过给 script 添加 type = module 的属性，就可以以 ES Module 的标准执行其中的 JS 代码了 -->
+    <script type="module">
+        console.log("this is es module");
+    </script>
+
+    <!-- 1, ESM 自动采用严格模式，忽略 'use strict' -->
+    <script type="module">
+        console.log(this); // undefined this在严格模式下，为 undefined
+    </script>
+
+    <!-- 2, 每个 ES Module 都是运行在单独的私有作用域中 -->
+    <script type="module">
+        var foo = 100     // 不会造成全局作用域污染问题
+        console.log(foo)  // 100
+    </script>
+    <script type="module">
+        console.log(foo) // Uncaught ReferenceError: foo is not defined
+    </script>
+
+    <!-- 3, ESM 是通过 CORS 的跨域请求方式请求外部 JS 模块的 -->
+    <script type="module" src="https://umpkg.com/jquery@3.4.1/dist/jquery.min.js">
+        // 需要服务端支持 CORS ，否则会出现跨域问题
+    </script>
+
+    <!-- 4, ESM 的 script 标签会延迟执行脚本，相当于 script 的 defer 属性 -->
+    <script type="module" src="./demo.js">
+        // 等待网页的渲染过后，再去执行脚本，不会阻碍页面的显示
+    </script>
+    <p>需要显示的内容</p>
+</body>
+</html>

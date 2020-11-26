@@ -760,7 +760,98 @@ class Person {
 
     形式：@types/模块名
 
+# Polyfill
 
+TS 对于语言的编译，只是语法层面，如果是 API 层面的的补充，需要手动 Polyfill!
 
+## core-js
 
+core-js 基本上把能 polyfill API 都实现了。但是，属于手动引入 Polyfill。
+
+* 1，安装插件模块
+
+  ```power
+  $ npm i core-js --save
+  ```
+
+* 2，使用core-js，两种引入方式，建议按需引入
+
+  <font color="#999999">引入语法如下：</font>
+
+  ```javascript
+  // 一, 全部引入
+  import 'core-js'
+  
+  // 二, 按需引入
+  import 'core-js/features/object'
+  ```
+
+* 3，测试是否成功
+
+  ```powershell
+  $ nvm use 12  # 12 node version, compile ts
+  $ tsc         # compile ts
+  $ nvm use 0   # 0 node version
+  $ node xxx.ts # success or failure
+  ```
+
+* **无法实现 Polyfill**
+
+  > Object.defineProperty 完全无法 Polyfill
+  >
+  > Promise 微任务，用宏任务代替
+
+## Babel
+
+使用 Babel 自动化的 Polyfill。
+
+* 1，安装依赖模块
+
+  ```powershell
+  $ npm i @babel/cli @babel/core @babel/preset-env @babel/preset-typescript --save
+  ```
+
+  **模块注释**
+
+  > @babel/cli：babel 的命令行入口
+  >
+  > @babel/core：babel的核心模块
+  >
+  > @babel/preset-env：是一个包含ES新特性所有转换插件的集合，可以根据环境判断哪些转哪些不转
+  >
+  > @babel/preset-typescript：是一个包含typescript转换为ES的插件集合
+
+* 2，配置babel.config.js文件
+
+  <font color="#999999">配置代码如下：</font>
+
+  ```javascript
+  // JSDoc
+  
+  // @ts-check
+  
+  /** @type {import('@babel/core').ConfigAPI} */
+  module.exports = {
+    presets: [
+      [
+        '@babel/env',
+        {
+          useBuiltIns: 'usage',
+          corejs: {
+            version: 3
+          }
+        }
+      ],
+      '@babel/typescript' // 不会做 TS 语法检查，只是移除类型注解
+    ]
+  }
+  ```
+
+* 3，使用编译命令
+
+  ```powershell
+  $ npx babel source.ts -o output.js # source.ts 源文件  output.js 编译后的文件
+  ```
+
+  
 

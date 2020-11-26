@@ -3,9 +3,11 @@
 // Object.defineProperty 完全无法 Polyfill
 // Promise 微任务，用宏任务代替
 
-// // import 'core-js/features/object'
+// 按需引入
+// import 'core-js/features/object'
 import 'core-js/features/object'
 
+// 全部引入
 // import 'core-js'
 
 interface User {
