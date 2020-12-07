@@ -1,0 +1,9 @@
+@import url('./reset.css');
+
+body {
+    margin: 0 auto;
+    padding: 0 20px;
+    max-width: 800px;
+    /* background-color: url('./u0.png'); */
+    /* background-size: cover; */
+}
