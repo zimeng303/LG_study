@@ -1,4 +1,5 @@
 /* @flow */
+// 定义通用的方法
 
 export const emptyObject = Object.freeze({})
 

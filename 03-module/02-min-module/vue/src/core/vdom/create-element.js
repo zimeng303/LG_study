@@ -25,26 +25,31 @@ const ALWAYS_NORMALIZE = 2
 
 // wrapper function for providing a more flexible interface
 // without getting yelled at by flow
-export function createElement (
+// 处理用户传入的参数
+export function createElement(
   context: Component,
   tag: any,
-  data: any,
+  data: any,  // data 可以省略，引入模块，设置样式/属性/事件
   children: any,
   normalizationType: any,
-  alwaysNormalize: boolean
+  alwaysNormalize: boolean // 如何去处理 children
 ): VNode | Array<VNode> {
+  // 此时 data ，没有传入，即 data --> children
   if (Array.isArray(data) || isPrimitive(data)) {
     normalizationType = children
     children = data
     data = undefined
   }
+  // 用户传入的 render 函数
   if (isTrue(alwaysNormalize)) {
+    // normalizationType 用来处理参数 children 
     normalizationType = ALWAYS_NORMALIZE
   }
   return _createElement(context, tag, data, children, normalizationType)
 }
 
-export function _createElement (
+// 创建 VNode
+export function _createElement(
   context: Component,
   tag?: string | Class<Component> | Function | Object,
   data?: VNodeData,
@@ -59,6 +64,7 @@ export function _createElement (
     )
     return createEmptyVNode()
   }
+  // <component v-bind:is="currentTabComponent"></component>
   // object syntax in v-bind
   if (isDef(data) && isDef(data.is)) {
     tag = data.is
@@ -79,6 +85,7 @@ export function _createElement (
       )
     }
   }
+  // 处理作用域插槽
   // support single function children as default scoped slot
   if (Array.isArray(children) &&
     typeof children[0] === 'function'
@@ -87,15 +94,28 @@ export function _createElement (
     data.scopedSlots = { default: children[0] }
     children.length = 0
   }
+  // 用户传过来的 render 函数
   if (normalizationType === ALWAYS_NORMALIZE) {
+    // 返回一维数组，处理用户手写的 render
+    // 当手写 render 函数的时候调用 
+    // 判断 children 的类型，如果是原始值的话转换成 VNode 的数组 
+    // 如果是数组的话，继续处理数组中的元素 
+    // 如果数组中的子元素又是数组(slot template)，递归处理 
+    // 如果连续两个节点都是字符串会合并文本节点
     children = normalizeChildren(children)
   } else if (normalizationType === SIMPLE_NORMALIZE) {
+    // 把二维数组，转换成一维数组
+    // 如果 children 中有函数组件的话，函数组件会返回数组形式 
+    // 这时候 children 就是一个二维数组，只需要把二维数组转换为一维数组
     children = simpleNormalizeChildren(children)
   }
   let vnode, ns
+  // 判断 tag 是字符串还是组件
   if (typeof tag === 'string') {
     let Ctor
     ns = (context.$vnode && context.$vnode.ns) || config.getTagNamespace(tag)
+    // 是否是 html 的保留标签
+    // 如果是浏览器的保留标签，创建对应的 VNode
     if (config.isReservedTag(tag)) {
       // platform built-in elements
       if (process.env.NODE_ENV !== 'production' && isDef(data) && isDef(data.nativeOn)) {
@@ -108,7 +128,10 @@ export function _createElement (
         config.parsePlatformTagName(tag), data, children,
         undefined, undefined, context
       )
+      // 判断是否是 自定义组件
     } else if ((!data || !data.pre) && isDef(Ctor = resolveAsset(context.$options, 'components', tag))) {
+      // 查找自定义组件构造函数的声明
+      // 根据 Ctor 创建组件的 VNode
       // component
       vnode = createComponent(Ctor, data, context, children, tag)
     } else {
@@ -135,7 +158,7 @@ export function _createElement (
   }
 }
 
-function applyNS (vnode, ns, force) {
+function applyNS(vnode, ns, force) {
   vnode.ns = ns
   if (vnode.tag === 'foreignObject') {
     // use default namespace inside foreignObject
@@ -156,7 +179,7 @@ function applyNS (vnode, ns, force) {
 // ref #5318
 // necessary to ensure parent re-render when deep bindings like :style and
 // :class are used on slot nodes
-function registerDeepBindings (data) {
+function registerDeepBindings(data) {
   if (isObject(data.style)) {
     traverse(data.style)
   }

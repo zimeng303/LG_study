@@ -25,8 +25,8 @@ let uid = 0
  */
 export default class Watcher {
   vm: Component;
-  expression: string;
-  cb: Function;
+  expression: string; // 表达式，
+  cb: Function;       // 回调函数
   id: number;
   deep: boolean;
   user: boolean;
@@ -42,15 +42,22 @@ export default class Watcher {
   getter: Function;
   value: any;
 
+  /** -- 三种 Watcher
+   * 1. 渲染 Watcher，即当前创建的 Watch，触发 mounted 生命钩子
+   * 2. 计算属性的 Watcher
+   * 3. 侦听器的 Watcher
+   */
   constructor (
     vm: Component,
-    expOrFn: string | Function,
-    cb: Function,
+    expOrFn: string | Function, // updateComponent
+    cb: Function,               // noop 空函数
     options?: ?Object,
     isRenderWatcher?: boolean
   ) {
     this.vm = vm
-    if (isRenderWatcher) {
+    
+    if (isRenderWatcher) { // 渲染 watcher
+      // this 指向 Watcher 实例
       vm._watcher = this
     }
     vm._watchers.push(this)
@@ -58,14 +65,19 @@ export default class Watcher {
     if (options) {
       this.deep = !!options.deep
       this.user = !!options.user
-      this.lazy = !!options.lazy
+      // 延迟视图
+      // 首次渲染时，立即执行
+      // 计算属性中，延迟执行
+      this.lazy = !!options.lazy 
       this.sync = !!options.sync
+      // 非首次渲染时，触发 beforeUpdate 生命钩子
       this.before = options.before
     } else {
       this.deep = this.user = this.lazy = this.sync = false
     }
     this.cb = cb
     this.id = ++uid // uid for batching
+    // 标识当前的 Watcher 是否是活动的 Watcher
     this.active = true
     this.dirty = this.lazy // for lazy watchers
     this.deps = []
@@ -79,6 +91,9 @@ export default class Watcher {
     if (typeof expOrFn === 'function') {
       this.getter = expOrFn
     } else {
+      // expOrFn 是字符串的时候，例如 watch: { 'person.name': function... }
+      // parsePath('person.name') 返回一个函数获取 person.name 的值
+      // 调用侦听器时，传入 string
       this.getter = parsePath(expOrFn)
       if (!this.getter) {
         this.getter = noop
@@ -90,19 +105,26 @@ export default class Watcher {
         )
       }
     }
+    // 计算属性时，lazy 默认为 true
     this.value = this.lazy
       ? undefined
-      : this.get()
+      : this.get() // 用户传入 Watcher | 渲染 Watcher
   }
 
   /**
    * Evaluate the getter, and re-collect dependencies.
    */
+  // 执行 getter，以及重新收集依赖
   get () {
-    pushTarget(this)
+    // 把当前的 Watcher 对象存入到栈里面
+    // 每一个组件对应一个 Watcher，Watcher 渲染视图
+    // 当组件进行嵌套时，需要将父组件的 Watcher 保存下来
+    // Dep.target = this = new Watcher()
+    pushTarget(this) 
     let value
     const vm = this.vm
     try {
+      // 执行 updateComponent
       value = this.getter.call(vm, vm)
     } catch (e) {
       if (this.user) {
@@ -113,6 +135,7 @@ export default class Watcher {
     } finally {
       // "touch" every property so they are all tracked as
       // dependencies for deep watching
+      // 深度监听
       if (this.deep) {
         traverse(value)
       }
@@ -129,6 +152,7 @@ export default class Watcher {
     const id = dep.id
     if (!this.newDepIds.has(id)) {
       this.newDepIds.add(id)
+      // watcher 添加 dep 
       this.newDeps.push(dep)
       if (!this.depIds.has(id)) {
         dep.addSub(this)
@@ -177,6 +201,7 @@ export default class Watcher {
    * Will be called by the scheduler.
    */
   run () {
+    // watcher 被处理
     if (this.active) {
       const value = this.get()
       if (

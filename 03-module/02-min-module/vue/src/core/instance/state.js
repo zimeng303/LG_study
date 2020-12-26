@@ -49,18 +49,24 @@ export function initState (vm: Component) {
   vm._watchers = []
   const opts = vm.$options
   if (opts.props) initProps(vm, opts.props)
+  // methods 不建议以 _ or $ 开头
   if (opts.methods) initMethods(vm, opts.methods)
   if (opts.data) {
     initData(vm)
   } else {
+    // observe() 将对象转换为响应式对象
     observe(vm._data = {}, true /* asRootData */)
   }
   if (opts.computed) initComputed(vm, opts.computed)
+  // 判断创建 Vue 实例时，是否传入了 watch 选项
+  // 并且不等于 （FireFox 浏览器的 Object.prototype 中存在的 watch）
   if (opts.watch && opts.watch !== nativeWatch) {
+    // 初始化 watch
     initWatch(vm, opts.watch)
   }
 }
 
+// 把 props 中的成员 注入到 Vue 实例中，并将其设置成响应式的
 function initProps (vm: Component, propsOptions: Object) {
   const propsData = vm.$options.propsData || {}
   const props = vm._props = {}
@@ -109,8 +115,11 @@ function initProps (vm: Component, propsOptions: Object) {
   toggleObserving(true)
 }
 
+// 把 data 中的成员 注入到 Vue 实例中，并将其设置成响应式的
 function initData (vm: Component) {
   let data = vm.$options.data
+  // 初始化 _data,组件中 data 是函数，调用函数返回结果
+  // 否则直接返回 data
   data = vm._data = typeof data === 'function'
     ? getData(data, vm)
     : data || {}
@@ -123,10 +132,13 @@ function initData (vm: Component) {
     )
   }
   // proxy data on instance
+  // 获取 data 中的所有属性
   const keys = Object.keys(data)
+  // 获取 props / methods
   const props = vm.$options.props
   const methods = vm.$options.methods
   let i = keys.length
+  // 判断 data 上的成员是否和 props/methods 重名
   while (i--) {
     const key = keys[i]
     if (process.env.NODE_ENV !== 'production') {
@@ -144,10 +156,14 @@ function initData (vm: Component) {
         vm
       )
     } else if (!isReserved(key)) {
+      // 判断是否是非响应式的，若是，则转换成响应式的
+      // 将 key 注入到 Vue 实例中
       proxy(vm, `_data`, key)
     }
   }
   // observe data
+  // 响应式处理
+  // 将 data 对象转化成响应式的对象
   observe(data, true /* asRootData */)
 }
 
@@ -276,6 +292,7 @@ function initMethods (vm: Component, methods: Object) {
           vm
         )
       }
+      // isReserved() 判断 key 是否是以 _ or $ 开头
       if ((key in vm) && isReserved(key)) {
         warn(
           `Method "${key}" conflicts with an existing Vue instance method. ` +
@@ -308,6 +325,7 @@ function createWatcher (
 ) {
   if (isPlainObject(handler)) {
     options = handler
+    // 获取传入的回调函数
     handler = handler.handler
   }
   if (typeof handler === 'string') {
@@ -347,20 +365,27 @@ export function stateMixin (Vue: Class<Component>) {
     cb: any,
     options?: Object
   ): Function {
+    // 获取 Vue 实例 this 
     const vm: Component = this
     if (isPlainObject(cb)) {
+      // 判断如果 cb 是对象执行 createWatcher
       return createWatcher(vm, expOrFn, cb, options)
     }
     options = options || {}
+    // 标记为用户 watcher
     options.user = true
+    // 创建用户 watcher 对象
     const watcher = new Watcher(vm, expOrFn, cb, options)
+    // 判断 immediate，如果为 true
     if (options.immediate) {
+      // 立即执行一次 cb 回调，并且把当前值传入
       try {
         cb.call(vm, watcher.value)
       } catch (error) {
         handleError(error, vm, `callback for immediate watcher "${watcher.expression}"`)
       }
     }
+    // 返回取消监听的方法
     return function unwatchFn () {
       watcher.teardown()
     }

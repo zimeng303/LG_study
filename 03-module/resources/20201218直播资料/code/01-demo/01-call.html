@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function fn1 (a, b) {
+      console.dir(this)
+      console.log(1)
+    }
+    function fn2 () {
+      console.log(this)
+      console.log(2)
+    }
+    // fn1.call(fn2)
+    // fn1.call.call(fn2, 1, 23)
+    
+
+    // context.fn1()
+    Function.prototype.mycall = function mycall (context, ...args) {
+      // 此处要去处理 context 是原始值的问题
+      if (typeof context === 'number') {
+        context = new Number(context)
+      }
+      // context = context || window
+      // 只有 context 的值是 null 或者 undefined 的时候才会返回 window
+      context = context ?? window
+      // 此处的 this 指向的是 fn1 函数
+      context.fn = this
+      const result = context.fn(...args)
+      delete context.fn
+      return result
+    }
+
+    const obj = { name: 'zs' }
+    fn1.mycall.mycall(fn2, 1, 2)
+
+  </script>
+</body>
+</html>

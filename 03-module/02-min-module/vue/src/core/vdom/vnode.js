@@ -35,7 +35,7 @@ export default class VNode {
     children?: ?Array<VNode>,
     text?: string,
     elm?: Node,
-    context?: Component,
+    context?: Component, // Vue实例 或 组件的实例
     componentOptions?: VNodeComponentOptions,
     asyncFactory?: Function
   ) {

@@ -30,7 +30,9 @@ export class CodegenState {
     const isReservedTag = options.isReservedTag || no
     this.maybeComponent = (el: ASTElement) => !!el.component || !isReservedTag(el.tag)
     this.onceId = 0
+    // 存储静态根节点生成的代码
     this.staticRenderFns = []
+    // 当前处理的节点是否是用 v-pre 进行标记的
     this.pre = false
   }
 }
@@ -44,9 +46,11 @@ export function generate (
   ast: ASTElement | void,
   options: CompilerOptions
 ): CodegenResult {
+  // 创建代码生成过程中使用的状态对象
   const state = new CodegenState(options)
   const code = ast ? genElement(ast, state) : '_c("div")'
   return {
+    // 对应 AST 对象生成的 VNode 代码的字符串形式
     render: `with(this){return ${code}}`,
     staticRenderFns: state.staticRenderFns
   }
@@ -77,6 +81,8 @@ export function genElement (el: ASTElement, state: CodegenState): string {
     } else {
       let data
       if (!el.plain || (el.pre && state.maybeComponent(el))) {
+        // 生成元素的属性/指令/事件等
+        // 处理各种指令，包括 genDirectives(model/text/html)
         data = genData(el, state)
       }
 
@@ -151,7 +157,7 @@ export function genIf (
   el.ifProcessed = true // avoid recursion
   return genIfConditions(el.ifConditions.slice(), state, altGen, altEmpty)
 }
-
+// 最终调用 genIfConditions 生成三元表达式
 function genIfConditions (
   conditions: ASTIfConditions,
   state: CodegenState,
@@ -523,23 +529,26 @@ function needsNormalization (el: ASTElement): boolean {
 }
 
 function genNode (node: ASTNode, state: CodegenState): string {
-  if (node.type === 1) {
+  if (node.type === 1) { // 标签
     return genElement(node, state)
-  } else if (node.type === 3 && node.isComment) {
+  } else if (node.type === 3 && node.isComment) { // 注释节点
     return genComment(node)
-  } else {
+  } else { // 文本节点
     return genText(node)
   }
 }
 
 export function genText (text: ASTText | ASTExpression): string {
+  // _v() --> createTextVNode()
   return `_v(${text.type === 2
     ? text.expression // no need for () because already wrapped in _s()
+    // JSON.stringify(text.text) 字符串加上引号 hello -> "hello"
     : transformSpecialNewlines(JSON.stringify(text.text))
   })`
 }
 
 export function genComment (comment: ASTText): string {
+  // JSON.stringify(text.text) 字符串加上引号 hello -> "hello"
   return `_e(${JSON.stringify(comment.text)})`
 }
 

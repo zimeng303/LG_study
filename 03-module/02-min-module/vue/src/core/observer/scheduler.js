@@ -85,8 +85,10 @@ function flushSchedulerQueue () {
 
   // do not cache length because more watchers might be pushed
   // as we run existing watchers
+  // 运行已经存在的 watchers
   for (index = 0; index < queue.length; index++) {
     watcher = queue[index]
+    // 渲染 Watcher， before 触发 beforeUpdate 生命钩子
     if (watcher.before) {
       watcher.before()
     }
@@ -114,10 +116,14 @@ function flushSchedulerQueue () {
   const activatedQueue = activatedChildren.slice()
   const updatedQueue = queue.slice()
 
+  // 清空上一次的依赖
   resetSchedulerState()
 
   // call component updated and activated hooks
+  
+  // 触发 actived 钩子函数
   callActivatedHooks(activatedQueue)
+  // 触发 updated 钩子函数
   callUpdatedHooks(updatedQueue)
 
   // devtool hook
@@ -161,10 +167,12 @@ function callActivatedHooks (queue) {
  * Jobs with duplicate IDs will be skipped unless it's
  * pushed when the queue is being flushed.
  */
+// 将当前 Watcher 放到队列中
 export function queueWatcher (watcher: Watcher) {
   const id = watcher.id
   if (has[id] == null) {
-    has[id] = true
+    has[id] = true // 表示当前 Watcher 被处理
+    // 当 Watcher 未被处理时，存放到队列中
     if (!flushing) {
       queue.push(watcher)
     } else {
@@ -177,6 +185,7 @@ export function queueWatcher (watcher: Watcher) {
       queue.splice(i + 1, 0, watcher)
     }
     // queue the flush
+    // 判断当前队列是否被执行
     if (!waiting) {
       waiting = true
 

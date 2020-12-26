@@ -5,15 +5,22 @@ import { detectErrors } from './error-detector'
 import { createCompileToFunctionFn } from './to-function'
 
 export function createCompilerCreator (baseCompile: Function): Function {
+  // baseOptions 平台相关的 options
+  // src/platforms/web/compiler/options.js 中定义
   return function createCompiler (baseOptions: CompilerOptions) {
     function compile (
       template: string,
       options?: CompilerOptions
     ): CompiledResult {
+      // 原型指向 baseOptions
+      // 用来合并 baseOptions 和 compile函数 传过来的 options
       const finalOptions = Object.create(baseOptions)
+      // 存储编译过程中出现的错误
       const errors = []
+      // 存储编译过程中出现的信息
       const tips = []
 
+      // 将消息放入到对应的数组中
       let warn = (msg, range, tip) => {
         (tip ? tips : errors).push(msg)
       }
@@ -58,6 +65,8 @@ export function createCompilerCreator (baseCompile: Function): Function {
 
       finalOptions.warn = warn
 
+      // baseCompile 模板编译的核心函数
+      // 把 模板 编译成 render 函数
       const compiled = baseCompile(template.trim(), finalOptions)
       if (process.env.NODE_ENV !== 'production') {
         detectErrors(compiled.ast, warn)

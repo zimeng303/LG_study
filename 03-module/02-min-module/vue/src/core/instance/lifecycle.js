@@ -23,8 +23,9 @@ export let isUpdatingChildComponent: boolean = false
 
 export function setActiveInstance(vm: Component) {
   const prevActiveInstance = activeInstance
-  activeInstance = vm
+  activeInstance = vm // vm 是父组件对象
   return () => {
+    // 解决组件嵌套问题
     activeInstance = prevActiveInstance
   }
 }
@@ -33,11 +34,13 @@ export function initLifecycle (vm: Component) {
   const options = vm.$options
 
   // locate first non-abstract parent
+  // 找到当前组件的父组件
   let parent = options.parent
   if (parent && !options.abstract) {
     while (parent.$options.abstract && parent.$parent) {
       parent = parent.$parent
     }
+    // 在父组件中记录子组件
     parent.$children.push(vm)
   }
 
@@ -55,22 +58,30 @@ export function initLifecycle (vm: Component) {
   vm._isBeingDestroyed = false
 }
 
+// _update 方法的作用是把 VNode 渲染成真实的 DOM
+// 首次渲染会调用，数据更新会调用
 export function lifecycleMixin (Vue: Class<Component>) {
+
   Vue.prototype._update = function (vnode: VNode, hydrating?: boolean) {
     const vm: Component = this
     const prevEl = vm.$el
+    // 之前所处理过的 vnode 对象
     const prevVnode = vm._vnode
     const restoreActiveInstance = setActiveInstance(vm)
     vm._vnode = vnode
     // Vue.prototype.__patch__ is injected in entry points
     // based on the rendering backend used.
+    // 判断是否是首次渲染
     if (!prevVnode) {
       // initial render
+      // __patch__ 将原来的真实 DOM 转换为 虚拟 DOM，然后与创建的 vnode 进行比较
+      // 最后 将虚拟DOM 转换为 真实DOM
       vm.$el = vm.__patch__(vm.$el, vnode, hydrating, false /* removeOnly */)
     } else {
       // updates
       vm.$el = vm.__patch__(prevVnode, vnode)
     }
+    // 还原之前存储的 activeInstance
     restoreActiveInstance()
     // update __vue__ reference
     if (prevEl) {
@@ -87,6 +98,7 @@ export function lifecycleMixin (Vue: Class<Component>) {
     // updated in a parent's updated hook.
   }
 
+  // 强制更新
   Vue.prototype.$forceUpdate = function () {
     const vm: Component = this
     if (vm._watcher) {
@@ -94,6 +106,7 @@ export function lifecycleMixin (Vue: Class<Component>) {
     }
   }
 
+  // 销毁 Vue 实例
   Vue.prototype.$destroy = function () {
     const vm: Component = this
     if (vm._isBeingDestroyed) {
@@ -138,14 +151,18 @@ export function lifecycleMixin (Vue: Class<Component>) {
   }
 }
 
+
 export function mountComponent (
   vm: Component,
   el: ?Element,
   hydrating?: boolean
 ): Component {
   vm.$el = el
+  // 判断用户是否传入 render 函数
   if (!vm.$options.render) {
+    // 没有传入 render 函数，创建 空VNode
     vm.$options.render = createEmptyVNode
+
     if (process.env.NODE_ENV !== 'production') {
       /* istanbul ignore if */
       if ((vm.$options.template && vm.$options.template.charAt(0) !== '#') ||
@@ -164,8 +181,10 @@ export function mountComponent (
       }
     }
   }
+  // 触发 beforeMount 生命钩子
   callHook(vm, 'beforeMount')
 
+  // 更新组件，实现挂载
   let updateComponent
   /* istanbul ignore if */
   if (process.env.NODE_ENV !== 'production' && config.performance && mark) {
@@ -186,7 +205,9 @@ export function mountComponent (
       measure(`vue ${name} patch`, startTag, endTag)
     }
   } else {
+    // 定义 updateComponent
     updateComponent = () => {
+      // _update 将 VNode 转换为 真实DOM
       vm._update(vm._render(), hydrating)
     }
   }
@@ -195,7 +216,9 @@ export function mountComponent (
   // since the watcher's initial patch may call $forceUpdate (e.g. inside child
   // component's mounted hook), which relies on vm._watcher being already defined
   new Watcher(vm, updateComponent, noop, {
+    // 执行 updateComponent
     before () {
+      // 非首次渲染时，被触发
       if (vm._isMounted && !vm._isDestroyed) {
         callHook(vm, 'beforeUpdate')
       }
@@ -207,6 +230,7 @@ export function mountComponent (
   // mounted is called for render-created child components in its inserted hook
   if (vm.$vnode == null) {
     vm._isMounted = true
+    // 页面挂载完毕
     callHook(vm, 'mounted')
   }
   return vm

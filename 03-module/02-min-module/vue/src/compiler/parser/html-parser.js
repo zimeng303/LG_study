@@ -58,6 +58,7 @@ export function parseHTML (html, options) {
   const canBeLeftOpenTag = options.canBeLeftOpenTag || no
   let index = 0
   let last, lastTag
+  // html 模板字符串
   while (html) {
     last = html
     // Make sure we're not in a plaintext content element like script/style
@@ -78,6 +79,7 @@ export function parseHTML (html, options) {
         }
 
         // http://en.wikipedia.org/wiki/Conditional_comment#Downlevel-revealed_conditional_comment
+        // 匹配是否是条件注释
         if (conditionalComment.test(html)) {
           const conditionalEnd = html.indexOf(']>')
 
@@ -248,6 +250,7 @@ export function parseHTML (html, options) {
     }
 
     if (options.start) {
+      // unary 一元标签，即自闭合标签
       options.start(tagName, attrs, unary, match.start, match.end)
     }
   }

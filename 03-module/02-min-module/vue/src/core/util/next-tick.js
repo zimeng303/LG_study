@@ -11,10 +11,14 @@ const callbacks = []
 let pending = false
 
 function flushCallbacks () {
+  // 处理结束
   pending = false
+  // 克隆 callbacks 数组
   const copies = callbacks.slice(0)
+  // 清空 callbacks 数组
   callbacks.length = 0
   for (let i = 0; i < copies.length; i++) {
+    // 依次执行 回调函数
     copies[i]()
   }
 }
@@ -42,6 +46,7 @@ let timerFunc
 if (typeof Promise !== 'undefined' && isNative(Promise)) {
   const p = Promise.resolve()
   timerFunc = () => {
+    // 微任务，在本次同步任务执行完毕以后，执行微任务
     p.then(flushCallbacks)
     // In problematic UIWebViews, Promise.then doesn't completely break, but
     // it can get stuck in a weird state where callbacks are pushed into the
@@ -50,7 +55,9 @@ if (typeof Promise !== 'undefined' && isNative(Promise)) {
     // "force" the microtask queue to be flushed by adding an empty timer.
     if (isIOS) setTimeout(noop)
   }
+  // 是否使用 微任务
   isUsingMicroTask = true
+  // MutationObserver 监听 DOM 对象的改变
 } else if (!isIE && typeof MutationObserver !== 'undefined' && (
   isNative(MutationObserver) ||
   // PhantomJS and iOS 7.x
@@ -74,6 +81,7 @@ if (typeof Promise !== 'undefined' && isNative(Promise)) {
   // Fallback to setImmediate.
   // Technically it leverages the (macro) task queue,
   // but it is still a better choice than setTimeout.
+  // setImmediate 只有 IE 和 Node 支持，始终在 setTimeout 之前执行
   timerFunc = () => {
     setImmediate(flushCallbacks)
   }
@@ -86,9 +94,11 @@ if (typeof Promise !== 'undefined' && isNative(Promise)) {
 
 export function nextTick (cb?: Function, ctx?: Object) {
   let _resolve
+  // 把 cb 加上异常处理存入 callbacks 数组中
   callbacks.push(() => {
     if (cb) {
       try {
+        // 调用 cb() 回调函数
         cb.call(ctx)
       } catch (e) {
         handleError(e, ctx, 'nextTick')
@@ -97,12 +107,15 @@ export function nextTick (cb?: Function, ctx?: Object) {
       _resolve(ctx)
     }
   })
+  // 判断队列是否正在被处理
   if (!pending) {
     pending = true
+    // 调用
     timerFunc()
   }
   // $flow-disable-line
   if (!cb && typeof Promise !== 'undefined') {
+    // 返回 promise 对象
     return new Promise(resolve => {
       _resolve = resolve
     })

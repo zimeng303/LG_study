@@ -14,6 +14,8 @@ export function initProvide (vm: Component) {
 }
 
 export function initInjections (vm: Component) {
+  // 把 vm.$options.inject 属性，并且这些属性在 vm._provided 中存在的属性
+  // 提取出来，放到 result 中
   const result = resolveInject(vm.$options.inject, vm)
   if (result) {
     toggleObserving(false)
@@ -35,7 +37,8 @@ export function initInjections (vm: Component) {
     toggleObserving(true)
   }
 }
-
+// inject对象中的属性，并且这些属性在 vm._provided 中存在的
+// 将这些属性提取出来，放到 result 中
 export function resolveInject (inject: any, vm: Component): ?Object {
   if (inject) {
     // inject is :any because flow is not smart enough to figure out cached

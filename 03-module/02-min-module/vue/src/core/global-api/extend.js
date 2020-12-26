@@ -10,6 +10,7 @@ export function initExtend (Vue: GlobalAPI) {
    * cid. This enables us to create wrapped "child
    * constructors" for prototypal inheritance and cache them.
    */
+  // 组件的构造函数，继承自 Vue 实例的构造函数
   Vue.cid = 0
   let cid = 1
 
@@ -18,24 +19,33 @@ export function initExtend (Vue: GlobalAPI) {
    */
   Vue.extend = function (extendOptions: Object): Function {
     extendOptions = extendOptions || {}
+    // Vue 构造函数
     const Super = this
     const SuperId = Super.cid
+    // 从缓存中加载组件的构造函数
     const cachedCtors = extendOptions._Ctor || (extendOptions._Ctor = {})
     if (cachedCtors[SuperId]) {
+      // 获取缓存的组件的构造函数
       return cachedCtors[SuperId]
     }
 
     const name = extendOptions.name || Super.options.name
     if (process.env.NODE_ENV !== 'production' && name) {
+      // 如果是开发环境，验证组件的名称
       validateComponentName(name)
     }
 
+    // 创建组件构造函数
     const Sub = function VueComponent (options) {
+      // 调用 _init() 初始化
       this._init(options)
     }
+
+    // 原型继承自 Vue
     Sub.prototype = Object.create(Super.prototype)
     Sub.prototype.constructor = Sub
     Sub.cid = cid++
+    // 合并 options
     Sub.options = mergeOptions(
       Super.options,
       extendOptions
@@ -63,6 +73,7 @@ export function initExtend (Vue: GlobalAPI) {
       Sub[type] = Super[type]
     })
     // enable recursive self-lookup
+    // 把组件构造函数保存到 Ctor.options.components.comp = Ctor
     if (name) {
       Sub.options.components[name] = Sub
     }
@@ -75,6 +86,7 @@ export function initExtend (Vue: GlobalAPI) {
     Sub.sealedOptions = extend({}, Sub.options)
 
     // cache constructor
+    // 把组件的构造函数缓存到 options._Ctor
     cachedCtors[SuperId] = Sub
     return Sub
   }

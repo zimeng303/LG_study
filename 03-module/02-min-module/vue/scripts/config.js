@@ -9,6 +9,7 @@ const version = process.env.VERSION || require('../package.json').version
 const weexVersion = process.env.WEEX_VERSION || require('../packages/weex-vue-framework/package.json').version
 const featureFlags = require('./feature-flags')
 
+// 打包后文件的 文件头模板
 const banner =
   '/*!\n' +
   ` * Vue.js v${version}\n` +
@@ -26,9 +27,12 @@ const weexFactoryPlugin = {
 }
 
 const aliases = require('./alias')
+// 将传入的路径转换为绝对路径
 const resolve = p => {
-  const base = p.split('/')[0]
+  // 根据路径中的前半部分去 alias 名找别名
+  const base = p.split('/')[0] // web || dist 
   if (aliases[base]) {
+    // 返回传入的 js 文件所在的绝对路径
     return path.resolve(aliases[base], p.slice(base.length + 1))
   } else {
     return path.resolve(__dirname, '../', p)
@@ -38,10 +42,10 @@ const resolve = p => {
 const builds = {
   // Runtime only (CommonJS). Used by bundlers e.g. Webpack & Browserify
   'web-runtime-cjs-dev': {
-    entry: resolve('web/entry-runtime.js'),
-    dest: resolve('dist/vue.runtime.common.dev.js'),
-    format: 'cjs',
-    env: 'development',
+    entry: resolve('web/entry-runtime.js'), // 入口文件
+    dest: resolve('dist/vue.runtime.common.dev.js'), // 输出文件
+    format: 'cjs', // 模块版本
+    env: 'development', // 运行环境
     banner
   },
   'web-runtime-cjs-prod': {
@@ -213,20 +217,22 @@ const builds = {
   }
 }
 
-function genConfig (name) {
+// 生成配置对象
+function genConfig (name) { // web-full-dev
   const opts = builds[name]
+  // 设置所有的配置信息
   const config = {
-    input: opts.entry,
-    external: opts.external,
+    input: opts.entry,       // 入口文件 entry-runtime-with-compiler.js
+    external: opts.external, // 生产依赖的版本号
     plugins: [
       flow(),
       alias(Object.assign({}, aliases, opts.alias))
     ].concat(opts.plugins || []),
-    output: {
+    output: { // 设置输出文件
       file: opts.dest,
-      format: opts.format,
-      banner: opts.banner,
-      name: opts.moduleName || 'Vue'
+      format: opts.format, // 模块版本，如 cjs || esm ...
+      banner: opts.banner, // 生成的构建版本的头部注释信息
+      name: opts.moduleName || 'Vue' // 模块名称
     },
     onwarn: (msg, warn) => {
       if (!/Circular/.test(msg)) {
@@ -255,17 +261,22 @@ function genConfig (name) {
     config.plugins.push(buble())
   }
 
+  // 监听 _name 属性变化，实时更新
   Object.defineProperty(config, '_name', {
-    enumerable: false,
+    enumerable: false, // 不可枚举
     value: name
   })
 
   return config
 }
 
-if (process.env.TARGET) {
+// 判断环境变量是否有 TARGET
+// 如果有的话 使用 genConfig() 生成 rollup 配置文件
+if (process.env.TARGET) { // web-full-dev
   module.exports = genConfig(process.env.TARGET)
 } else {
+  // 否则获取全部配置
+  // exports.xx，node 语法， 向外暴露 函数/变量
   exports.getBuild = genConfig
   exports.getAllBuilds = () => Object.keys(builds).map(genConfig)
 }

@@ -9,12 +9,16 @@ import {
 } from '../util/index'
 import { updateListeners } from '../vdom/helpers/index'
 
+// 核心：获取父组件的事件，注册到当前组件上
 export function initEvents (vm: Component) {
+  // _events 用来处理事件名称(key)，以及对应的事件函数(value)
   vm._events = Object.create(null)
   vm._hasHookEvent = false
   // init parent attached events
+  // 获取父元素上附加的事件
   const listeners = vm.$options._parentListeners
   if (listeners) {
+    // 注册自定义事件
     updateComponentListeners(vm, listeners)
   }
 }
@@ -51,13 +55,16 @@ export function updateComponentListeners (
 
 export function eventsMixin (Vue: Class<Component>) {
   const hookRE = /^hook:/
+  // 注册事件
   Vue.prototype.$on = function (event: string | Array<string>, fn: Function): Component {
     const vm: Component = this
     if (Array.isArray(event)) {
+      // 给多个事件，注册多个事件处理函数
       for (let i = 0, l = event.length; i < l; i++) {
         vm.$on(event[i], fn)
       }
     } else {
+      // {'click': [fn1, fn2]}
       (vm._events[event] || (vm._events[event] = [])).push(fn)
       // optimize hook:event cost by using a boolean flag marked at registration
       // instead of a hash lookup
@@ -68,6 +75,7 @@ export function eventsMixin (Vue: Class<Component>) {
     return vm
   }
 
+  // 注册事件，只会触发一次
   Vue.prototype.$once = function (event: string, fn: Function): Component {
     const vm: Component = this
     function on () {
@@ -79,6 +87,7 @@ export function eventsMixin (Vue: Class<Component>) {
     return vm
   }
 
+  // 取消事件
   Vue.prototype.$off = function (event?: string | Array<string>, fn?: Function): Component {
     const vm: Component = this
     // all
@@ -115,6 +124,7 @@ export function eventsMixin (Vue: Class<Component>) {
     return vm
   }
 
+  // 触发事件
   Vue.prototype.$emit = function (event: string): Component {
     const vm: Component = this
     if (process.env.NODE_ENV !== 'production') {
