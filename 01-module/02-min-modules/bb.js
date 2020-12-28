@@ -12,3 +12,13 @@ function computed (arr) {
     return Math.max(...result)
 }
 console.log(computed(arr)); 
+
+
+// @ts-check
+
+/** @type {number}  */ 
+let foo 
+
+foo = 123
+
+foo = '111'
