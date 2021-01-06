@@ -1,0 +1,16 @@
+[
+  {
+    "name": "about",
+    "path": "/about",
+    "component": "F:\\\\LaGou\\\\03-module\\\\03-min-module\\\\服务端渲染基础\\\\04-现代化的服务端渲染\\\\ssr\\\\pages\\\\about.vue",
+    "chunkName": "pages/about",
+    "_name": "_643d2768"
+  },
+  {
+    "name": "index",
+    "path": "/",
+    "component": "F:\\\\LaGou\\\\03-module\\\\03-min-module\\\\服务端渲染基础\\\\04-现代化的服务端渲染\\\\ssr\\\\pages\\\\index.vue",
+    "chunkName": "pages/index",
+    "_name": "_f815fba6"
+  }
+]
