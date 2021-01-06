@@ -47,20 +47,31 @@
       </el-table-column>
     </el-table>
     <div>
+<<<<<<< HEAD
       <p>已选 <span> {{ checkedCount }} </span> 件商品，总价：<span> {{ checkedPrice.toFixed(2) }} </span></p>
+=======
+      <p>已选 <span>xxx</span> 件商品，总价：<span>xxx</span></p>
+>>>>>>> ae983c3a3a464377454724feeb95c6a46557fd16
       <el-button type="danger">结算</el-button>
     </div>
   </div>
 </template>
 
 <script>
+<<<<<<< HEAD
 import { mapGetters, mapMutations, mapState } from 'vuex'
+=======
+import { mapMutations, mapState } from 'vuex'
+>>>>>>> ae983c3a3a464377454724feeb95c6a46557fd16
 
 export default {
   name: 'Cart',
   computed: {
     ...mapState('cart', ['cartProducts']),
+<<<<<<< HEAD
     ...mapGetters('cart', ['checkedCount', 'checkedPrice']),
+=======
+>>>>>>> ae983c3a3a464377454724feeb95c6a46557fd16
     checkedAll: {
       get () {
         return this.cartProducts.every((prod) => prod.isChecked)

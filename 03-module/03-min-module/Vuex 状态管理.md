@@ -921,6 +921,7 @@ Action 类似于 mutation，不同在于：
 
 **全选功能**
 
+<<<<<<< HEAD
 * cart 模块实现更新商品的选中状态，`store/modules/cart.js`
 
   ```js
@@ -987,11 +988,21 @@ Action 类似于 mutation，不同在于：
   	])
   }
   ```
+=======
+* cart 模块实现更新商品的选中状态，store/modules/cart.js
+
+  
+
+* views/cart.vue，实现全选功能
+
+  * 使用事件抛出一个值
+>>>>>>> ae983c3a3a464377454724feeb95c6a46557fd16
 
 **数字文本框**
 
 * cart 模块实现更新商品数量，`store/modules/cart.js`
 
+<<<<<<< HEAD
   ```js
   const mutations = {
       updateProduct (state, {
@@ -1028,6 +1039,11 @@ Action 类似于 mutation，不同在于：
       ])
   }
   ```
+=======
+  
+
+* views/cart.vue，实现数字文本框功能
+>>>>>>> ae983c3a3a464377454724feeb95c6a46557fd16
 
 **删除**
 
@@ -1035,6 +1051,7 @@ Action 类似于 mutation，不同在于：
 
 **小计**
 
+<<<<<<< HEAD
 * cart 模块实现统计选中商品价格和数量，`store/modules/cart.js`
   
 ```js
@@ -1169,6 +1186,24 @@ export default new Vuex.Store({
     }
 })
 ```
+=======
+* cart 模块实现统计选中商品价格和数量，store/modules/cart.js
+  
+
+* `views/cart.vue`，实现小计
+
+**本地存储**
+
+**Vuex** **插件**
+
+**严格模式**
+
+**Vuex** **模拟实现**
+
+回顾基础示例，自己模拟实现一个 Vuex 实现同样的功能
+
+
+>>>>>>> ae983c3a3a464377454724feeb95c6a46557fd16
 
 **实现思路**
 
@@ -1182,6 +1217,7 @@ export default new Vuex.Store({
 
 **install** **方法**
 
+<<<<<<< HEAD
 * `src/myvuex/index.js`
 
 ```js
@@ -1253,10 +1289,15 @@ function install (Vue) {
   }
   ```
 
+=======
+**Store** **类** 
+
+>>>>>>> ae983c3a3a464377454724feeb95c6a46557fd16
 **使用自己实现的** **Vuex**
 
 * `src/store/index.js` 中修改导入 Vuex 的路径，测试
 
+<<<<<<< HEAD
   ```js
   import Vuex from '../myvuex'
   // 注册插件
@@ -1265,5 +1306,7 @@ function install (Vue) {
 
   
 
+=======
+>>>>>>> ae983c3a3a464377454724feeb95c6a46557fd16
 
 

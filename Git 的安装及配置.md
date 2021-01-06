@@ -49,3 +49,43 @@
 ![image-20210106154334483](C:\Users\86135\AppData\Roaming\Typora\typora-user-images\image-20210106154334483.png)
 
 ![image-20210106154450556](C:\Users\86135\AppData\Roaming\Typora\typora-user-images\image-20210106154450556.png)
+
+
+
+* 设置用户名：
+
+  ```git 
+  git config -- global user.name 'gitee上注册的用户名';
+  ```
+
+* 设置用户邮箱：
+
+  ```git
+  git config -- global user.email 'gitee上注册的邮箱';
+  ```
+
+  ![image-20210106155405993](C:\Users\86135\AppData\Roaming\Typora\typora-user-images\image-20210106155405993.png)
+
+# 配置 Git  的密钥
+
+* 命令
+
+  ```powershell
+  ssh-keygen -t rsa -C "gitee上注册的邮箱"
+  ```
+
+  ![image-20210106160207170](C:\Users\86135\AppData\Roaming\Typora\typora-user-images\image-20210106160207170.png)
+
+* 密钥生成位置 `C:\Users\86135\.ssh\id_rsa.pub`
+
+  ![image-20210106160518284](C:\Users\86135\AppData\Roaming\Typora\typora-user-images\image-20210106160518284.png)
+
+* gitee 配置 ssh 公钥
+
+  ![image-20210106161053104](C:\Users\86135\AppData\Roaming\Typora\typora-user-images\image-20210106161053104.png)
+
+  ![image-20210106161317097](C:\Users\86135\AppData\Roaming\Typora\typora-user-images\image-20210106161317097.png)
+
+* github，配置 ssh 公钥
+
+  ![image-20210106162303999](C:\Users\86135\AppData\Roaming\Typora\typora-user-images\image-20210106162303999.png)

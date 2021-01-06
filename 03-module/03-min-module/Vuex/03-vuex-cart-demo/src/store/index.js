@@ -5,6 +5,7 @@ import cart from './modules/cart'
 
 Vue.use(Vuex)
 
+<<<<<<< HEAD
 // 定义插件
 const myPlugin = store => {
   // 订阅 store 中的 mutation ，每次 mutation 之后调用
@@ -16,6 +17,8 @@ const myPlugin = store => {
   })
 }
 
+=======
+>>>>>>> ae983c3a3a464377454724feeb95c6a46557fd16
 export default new Vuex.Store({
   state: {
   },
@@ -26,7 +29,11 @@ export default new Vuex.Store({
   modules: {
     products,
     cart
+<<<<<<< HEAD
   },
   // 注册插件
   plugins: [myPlugin]
+=======
+  }
+>>>>>>> ae983c3a3a464377454724feeb95c6a46557fd16
 })

@@ -1,6 +1,10 @@
 const state = {
   // 记录所有的购物车数据
+<<<<<<< HEAD
   cartProducts: JSON.parse(window.localStorage.getItem('cart-products')) || []
+=======
+  cartProducts: []
+>>>>>>> ae983c3a3a464377454724feeb95c6a46557fd16
 }
 
 const getters = {
@@ -9,6 +13,7 @@ const getters = {
   },
   totalPrice (state) {
     return state.cartProducts.reduce((sum, prod) => sum + prod.totalPrice, 0)
+<<<<<<< HEAD
   },
   checkedCount (state) {
     return state.cartProducts.reduce((sum, prod) => {
@@ -25,6 +30,8 @@ const getters = {
       }
       return sum
     }, 0)
+=======
+>>>>>>> ae983c3a3a464377454724feeb95c6a46557fd16
   }
 }
 
