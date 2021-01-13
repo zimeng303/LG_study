@@ -286,11 +286,77 @@ Nuxt.js 提供了一系列常用的命令, 用于开发或发布部署。
 * Linux 服务器
 * 把代码提交到 GitHub 远程仓库
 
+#### 配置 GitHub Access Token
 
+* 生成：[https://github.com/settings/tokens](https://github.com/settings/tokens)
 
+  * 登录 GitHub，点击右上角的 `+` 号，选择 `Settings`，点击 `Developer settings`，如图所示：
 
+    ![image-20210113153017089](C:\Users\86135\AppData\Roaming\Typora\typora-user-images\image-20210113153017089.png)
 
+  * 然后，选择 `Personal access tokens`，点击<kbd>`Generate new token`</kbd>，生成 Token，如图所示：
 
+    ![image-20210113153215401](C:\Users\86135\AppData\Roaming\Typora\typora-user-images\image-20210113153215401.png)
+
+  * 填写生成 Token 的相关信息，以及选择相关权限，如图所示：
+
+    ![image-20210113153455261](C:\Users\86135\AppData\Roaming\Typora\typora-user-images\image-20210113153455261.png)
+
+  * 生成Token，如图所示：
+
+    ![image-20210113152710837](C:\Users\86135\AppData\Roaming\Typora\typora-user-images\image-20210113152710837.png)
+
+* 配置到项目的 `Secrets` 中：[项目所在的 GitHub 地址](https://github.com/zimeng303/LG_study/tree/master/03-module/03-min-module/NuxtJs/realworld-nuxtjs)
+
+  * 进入仓库，选择 `settings`，点击 `Secrets`，再点击 `New repository secret`，如图所示：
+
+  ![image-20210113154218561](C:\Users\86135\AppData\Roaming\Typora\typora-user-images\image-20210113154218561.png)
+
+  * 将刚才生成的 `token` 填入，如图所示：
+
+  ![image-20210113154541539](C:\Users\86135\AppData\Roaming\Typora\typora-user-images\image-20210113154541539.png)
+
+### 配置 GitHub Actions 执行脚本
+
+* 在项目根目录创建 `.github/workflows` 目录
+
+* 下载 `main.yml` 到 `workflows` 目录中
+
+  * [https://github.com/lipengzhou/realworld-nuxtjs/edit/master/.github/workflows/main.yml](https://github.com/lipengzhou/realworld-nuxtjs/edit/master/.github/workflows/main.yml)
+
+* 修改配置
+
+  * 配置中，所用到的下载资源地址，修改为自己项目所在的远程仓库地址
+
+  ![image-20210113161008930](C:\Users\86135\AppData\Roaming\Typora\typora-user-images\image-20210113161008930.png)
+
+  * 将所需用到的 `HOST` 、`PORT`、`USERNAME`、`PASSWORD` ，配置到 Secrets 中
+
+  ![image-20210113160648925](C:\Users\86135\AppData\Roaming\Typora\typora-user-images\image-20210113160648925.png)
+
+* 配置 PM2 配置文件
+
+  * 根目录下，新建 `pm2.config.json`
+
+  ```json
+  {
+      "apps": [
+          {
+              "name": "RealWorld",
+              "script": "npm",
+              "args": "start"
+          }
+      ]
+  }
+  ```
+
+* 提交更新
+
+* 查看自动部署状态
+
+* 访问网站
+
+* 提交更新......
 
 
 
