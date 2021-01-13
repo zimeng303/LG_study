@@ -1,9 +1,0 @@
-{
-  "name": "stylelint-demo",
-  "version": "1.0.0",
-  "main": "index.js",
-  "license": "MIT",
-  "devDependencies": {
-    "stylelint": "^13.8.0"
-  }
-}
