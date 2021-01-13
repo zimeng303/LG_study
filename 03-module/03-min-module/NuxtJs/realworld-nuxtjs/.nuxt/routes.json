@@ -1,0 +1,43 @@
+[
+  {
+    "path": "/",
+    "component": "F:\\\\LaGou\\\\03-module\\\\03-min-module\\\\NuxtJs\\\\realworld-nuxtjs\\\\pages\\\\layout",
+    "children": [
+      {
+        "path": "",
+        "name": "home",
+        "component": "F:\\\\LaGou\\\\03-module\\\\03-min-module\\\\NuxtJs\\\\realworld-nuxtjs\\\\pages\\\\home"
+      },
+      {
+        "path": "/login",
+        "name": "login",
+        "component": "F:\\\\LaGou\\\\03-module\\\\03-min-module\\\\NuxtJs\\\\realworld-nuxtjs\\\\pages\\\\login"
+      },
+      {
+        "path": "/register",
+        "name": "register",
+        "component": "F:\\\\LaGou\\\\03-module\\\\03-min-module\\\\NuxtJs\\\\realworld-nuxtjs\\\\pages\\\\login"
+      },
+      {
+        "path": "/profile/:username",
+        "name": "profile",
+        "component": "F:\\\\LaGou\\\\03-module\\\\03-min-module\\\\NuxtJs\\\\realworld-nuxtjs\\\\pages\\\\profile"
+      },
+      {
+        "path": "/settings",
+        "name": "settings",
+        "component": "F:\\\\LaGou\\\\03-module\\\\03-min-module\\\\NuxtJs\\\\realworld-nuxtjs\\\\pages\\\\settings"
+      },
+      {
+        "path": "/editor",
+        "name": "editor",
+        "component": "F:\\\\LaGou\\\\03-module\\\\03-min-module\\\\NuxtJs\\\\realworld-nuxtjs\\\\pages\\\\editor"
+      },
+      {
+        "path": "/article/:slug",
+        "name": "article",
+        "component": "F:\\\\LaGou\\\\03-module\\\\03-min-module\\\\NuxtJs\\\\realworld-nuxtjs\\\\pages\\\\article"
+      }
+    ]
+  }
+]
