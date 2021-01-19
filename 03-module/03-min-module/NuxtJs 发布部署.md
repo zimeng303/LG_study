@@ -191,6 +191,10 @@ Nuxt.js 提供了一系列常用的命令, 用于开发或发布部署。
   * 访问 `公网Ip:port` ，如图所示：
   
      ![image-20210113143806152](F:\LaGou\03-module\03-min-module\assets\image-20210113143806152.png)
+  
+    > 注意：
+    >
+    > ​	如果访问连接，没有响应，查看 `是否配置安全组规则`，或者 [防火墙相关配置](https://blog.csdn.net/zimeng303/article/details/112562586)
 
 ## pm2 启动 web 服务
 
@@ -292,29 +296,29 @@ Nuxt.js 提供了一系列常用的命令, 用于开发或发布部署。
 
   * 登录 GitHub，点击右上角的 `+` 号，选择 `Settings`，点击 `Developer settings`，如图所示：
 
-    ![image-20210113153017089](C:\Users\86135\AppData\Roaming\Typora\typora-user-images\image-20210113153017089.png)
+    ![image-20210113153017089](F:\LaGou\03-module\03-min-module\assets\image-20210113153017089.png)
 
   * 然后，选择 `Personal access tokens`，点击<kbd>`Generate new token`</kbd>，生成 Token，如图所示：
 
-    ![image-20210113153215401](C:\Users\86135\AppData\Roaming\Typora\typora-user-images\image-20210113153215401.png)
+    ![image-20210113153215401](F:\LaGou\03-module\03-min-module\assets\image-20210113153215401.png)
 
   * 填写生成 Token 的相关信息，以及选择相关权限，如图所示：
 
-    ![image-20210113153455261](C:\Users\86135\AppData\Roaming\Typora\typora-user-images\image-20210113153455261.png)
+    ![image-20210113153455261](F:\LaGou\03-module\03-min-module\assets\image-20210113153455261.png)
 
   * 生成Token，如图所示：
 
-    ![image-20210113152710837](C:\Users\86135\AppData\Roaming\Typora\typora-user-images\image-20210113152710837.png)
+    ![image-20210113152710837](F:\LaGou\03-module\03-min-module\assets\image-20210113152710837.png)
 
 * 配置到项目的 `Secrets` 中：[项目所在的 GitHub 地址](https://github.com/zimeng303/LG_study/tree/master/03-module/03-min-module/NuxtJs/realworld-nuxtjs)
 
   * 进入仓库，选择 `settings`，点击 `Secrets`，再点击 `New repository secret`，如图所示：
 
-  ![image-20210113154218561](C:\Users\86135\AppData\Roaming\Typora\typora-user-images\image-20210113154218561.png)
+  ![image-20210113154218561](F:\LaGou\03-module\03-min-module\assets\image-20210113154218561.png)
 
   * 将刚才生成的 `token` 填入，如图所示：
 
-  ![image-20210113154541539](C:\Users\86135\AppData\Roaming\Typora\typora-user-images\image-20210113154541539.png)
+  ![image-20210113154541539](F:\LaGou\03-module\03-min-module\assets\image-20210113154541539.png)
 
 ### 配置 GitHub Actions 执行脚本
 
@@ -322,17 +326,88 @@ Nuxt.js 提供了一系列常用的命令, 用于开发或发布部署。
 
 * 下载 `main.yml` 到 `workflows` 目录中
 
-  * [https://github.com/lipengzhou/realworld-nuxtjs/edit/master/.github/workflows/main.yml](https://github.com/lipengzhou/realworld-nuxtjs/edit/master/.github/workflows/main.yml)
+  * [https://github.com/zimeng303/realworld-nuxt/blob/master/.github/workflows/main.yml](https://github.com/zimeng303/realworld-nuxt/blob/master/.github/workflows/main.yml)
+
+  * `main.yml` 配置代码
+
+    ```yaml
+    name: Publish And Deploy Demo
+    # 提交 以 V 开头的命令时，才会触发自动部署
+    on:
+      push:
+        tags:
+          - 'v*'
+    
+    jobs:
+      build-and-deploy:
+        runs-on: ubuntu-latest
+        steps:
+    
+        # 下载源码
+        - name: Checkout
+          uses: actions/checkout@master
+    
+        # 打包构建
+        - name: Build
+          uses: actions/setup-node@master
+        - run: npm install
+        - run: npm run build
+        - run: tar -zcvf release.tgz .nuxt static nuxt.config.js package.json package-lock.json pm2.config.json
+    
+        # 发布 Release
+        - name: Create Release
+          id: create_release
+          uses: actions/create-release@master
+          env:
+            GITHUB_TOKEN: ${{ secrets.TOKEN }} # TOKEN 对应我们添加的 secret name
+          with:
+            tag_name: ${{ github.ref }}
+            release_name: Release ${{ github.ref }}
+            draft: false
+            prerelease: false
+    
+        # 上传构建结果到 Release
+        - name: Upload Release Asset
+          id: upload-release-asset
+          uses: actions/upload-release-asset@master
+          env:
+            GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          with:
+          	# release 上传路径、名称配置
+            upload_url: ${{ steps.create_release.outputs.upload_url }}
+            asset_path: ./release.tgz
+            asset_name: release.tgz
+            asset_content_type: application/x-tgz
+    
+        # 部署到服务器
+        - name: Deploy
+          uses: appleboy/ssh-action@master
+          with:
+          	# 在 Secrets 中，配置下面属性
+            host: ${{ secrets.HOST }}
+            username: ${{ secrets.USERNAME }}
+            password: ${{ secrets.PASSWORD }}
+            port: ${{ secrets.PORT }}
+            # 下面的 release 地址 ，修改为 自己的
+            script: |
+              rm -rf /root/realworld-nuxtjs/
+              mkdir /root/realworld-nuxtjs
+              cd /root/realworld-nuxtjs          
+              wget https://github.com/zimeng303/realworld-nuxt/releases/latest/download/release.tgz -O release.tgz
+              tar zxvf release.tgz
+              npm install --production
+              pm2 reload pm2.config.json
+    ```
 
 * 修改配置
 
   * 配置中，所用到的下载资源地址，修改为自己项目所在的远程仓库地址
 
-  ![image-20210113161008930](C:\Users\86135\AppData\Roaming\Typora\typora-user-images\image-20210113161008930.png)
+  ![image-20210113161008930](F:\LaGou\03-module\03-min-module\assets\image-20210113161008930.png)
 
   * 将所需用到的 `HOST` 、`PORT`、`USERNAME`、`PASSWORD` ，配置到 Secrets 中
 
-  ![image-20210113160648925](C:\Users\86135\AppData\Roaming\Typora\typora-user-images\image-20210113160648925.png)
+  ![image-20210113160648925](F:\LaGou\03-module\03-min-module\assets\image-20210113160648925.png)
 
 * 配置 PM2 配置文件
 
@@ -352,9 +427,73 @@ Nuxt.js 提供了一系列常用的命令, 用于开发或发布部署。
 
 * 提交更新
 
+  * 将代码暂存到本地：
+
+    ```powershell
+    git add .
+    ```
+
+  * 新建标签：
+
+    ``` powershell
+    git tag 版本号
+    # git tag v1.0.0
+    ```
+
+  * 查看创建的标签：
+
+    ``` powershell
+    git tag 
+    ```
+
+    运行结果，如图所示：
+
+    ![image-20210113163337225](F:\LaGou\03-module\03-min-module\assets\image-20210113163337225.png)
+
+  * 将代码推送到对应的 远程 tag 中：
+
+    ```powershell
+    git push origin v0.2.0
+    ```
+
+    运行结果，如图所示：
+
+    ![image-20210113163627435](F:\LaGou\03-module\03-min-module\assets\image-20210113163627435.png)
+    
+  * 删除 `tag`
+
+    ```powershell
+    git tag -d 版本号
+    # git tag -d v0.1.3
+    ```
+
+  * 删除远程仓库的 `tag`
+
+    ```powershell
+    git push origin :refs/tags/v0.1.3
+    ```
+
 * 查看自动部署状态
 
+  * 登录 GitHub，查看新建的 tag：
+
+  ![image-20210113163749074](F:\LaGou\03-module\03-min-module\assets\image-20210113163749074.png)
+
+  * 点击 `actions` ，找到刚才 `commit` 的注解，进入面板，如图所示：
+
+    ![image-20210113171015685](F:\LaGou\03-module\03-min-module\assets\image-20210113171015685.png)
+
+    ![image-20210113171105323](F:\LaGou\03-module\03-min-module\assets\image-20210113171105323.png)
+
+    ![image-20210113170608216](F:\LaGou\03-module\03-min-module\assets\image-20210113170608216.png)
+    
+  * 部署成功，如图所示：
+
+    ![image-20210114080839550](F:\LaGou\03-module\03-min-module\assets\image-20210114080839550.png)
+
 * 访问网站
+
+  ![image-20210114081014524](F:\LaGou\03-module\03-min-module\assets\image-20210114081014524.png)
 
 * 提交更新......
 
