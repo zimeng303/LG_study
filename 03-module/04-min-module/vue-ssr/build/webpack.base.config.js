@@ -15,17 +15,17 @@ const isProd = process.env.NODE_ENV === 'production'
 
 module.exports = {
     // 打包模式
-    mode: isProd ? 'production' : 'development', 
+    mode: isProd ? 'production' : 'development',
     // 打包结果输出
     output: {
-        path: resolve('../dist/'), 
+        path: resolve('../dist/'),
         publicPath: '/dist/', // 打包结果的请求路径
         filename: '[name].[chunkhash].js'
     },
     resolve: {
         alias: {
             // 路径别名，@ 指向 src      
-            '@': resolve('../src/')    
+            '@': resolve('../src/')
         },
         // 可以省略的扩展名
         // 当省略扩展名的时候，按照从前往后的顺序依次解析   

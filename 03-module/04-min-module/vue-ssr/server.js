@@ -50,25 +50,26 @@ if (isProd) {
 // 现在我们的服务器与应用程序已经解耦！
 // bundle renderer 在调用    renderToString 时，
 // 它将自动执行「由    bundle 创建的应用程序实例」所导出的函数（传入上下文作为参数），然后渲染 它。
-const render = (req, res) => {
-    renderer.renderToString({
-        // 配置传到模板中的数据
-        title: '拉勾教育',
-        meta: `<meta name="description" content="拉勾教育">`
-    }, (err, html) => {
-        if (err) {
-            return res.status(500).end('Internal Server Error')
-        }
+const render = async (req, res) => {
+    try {
+        const html = await renderer.renderToString({
+            // 配置传到模板中的数据 ==> entry-server.js 中的 context
+            title: '拉勾教育',
+            meta: `<meta name="description" content="拉勾教育">`,
+            url: req.url
+        })
         // html 就是渲染出来的结果字符串
         // 添加响应头，解决编码问题
         res.setHeader('Content-Type', 'text/html; charset=utf8')
         // 结合了模板的完整内容
         res.end(html)
-    })
+    } catch (err) {
+        return res.status(500).end('Internal Server Error')
+    }
 }
 
-// 添加路由
-server.get('/', isProd
+// 服务端路由设置为 *，意味着所有的路由都会进入这里
+server.get('*', isProd
     ? render // 生产模式：使用构建好的包直接渲染
     : async (req, res) => {
         // 等待有了 Renderer 渲染器以后，调用 render 函数

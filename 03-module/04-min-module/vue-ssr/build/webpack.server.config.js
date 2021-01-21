@@ -23,7 +23,7 @@ module.exports = merge(baseConfig, {
     // 不打包 node_modules 第三方包，而是保留 require 方式直接加载  
     externals: [nodeExternals({
         // 白名单中的资源依然正常打包    
-        allowlist: [/\.css$/]
+        allowlist: [/\.css$/],
     })],
     plugins: [
         // 这是将服务器的整个输出构建为单个 JSON 文件的插件。   

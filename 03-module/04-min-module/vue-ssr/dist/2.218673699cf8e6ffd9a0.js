@@ -1,0 +1,2 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[2],{9:function(t,e,n){"use strict";n.r(e);var u={name:"AboutIndex",metaInfo:{title:"关于"}},i=n(1),l=Object(i.a)(u,(function(){var t=this.$createElement;return(this._self._c||t)("div",[this._v("About")])}),[],!1,null,null,null);e.default=l.exports}}]);
+//# sourceMappingURL=2.218673699cf8e6ffd9a0.js.map
