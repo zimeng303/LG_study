@@ -1,15 +1,19 @@
 {
   "name": "alison-input",
-  "version": "1.0.0",
+  "version": "0.0.4",
   "description": "",
-  "main": "index.js",
+  "main": "dist/cjs/index.js",
+  "module": "dist/es/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rollup -c",
+    "del": "rimraf dist"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "dependencies": {
     "lodash": "3"
-  }
+  },
+  "gitHead": "0de72546f427c4e23414e19461f03739777700ad"
 }

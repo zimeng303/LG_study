@@ -31,7 +31,7 @@
 
 * $refs
 
-  ![image-20210127172944425](C:\Users\86135\AppData\Roaming\Typora\typora-user-images\image-20210127172944425.png)
+  ![image-20210127172944425](F:\LaGou\03-module\04-min-module\assets\image-20210127172944425.png)
 
 * 依赖注入 provide / inject
 
@@ -763,17 +763,620 @@ ElementUI 中的表单验证，是使用了 `async-validator` 模块
   lerna publish
   ```
 
+* 清理项目中的 `node_modules`
+
+  ```powershell
+  lerna clean
+  ```
+
+> <font color="#f00">注意：</font>
+>
+> * 在发布之前，需要建立远端 Git 仓库，并且连接本地项目
+
+* 在发布之前，还需要 注册 / 登录 npm
+
+  ```powershell
+  # 注册
+  npm adduser
   
+  # 登录
+  npm login
+  ```
 
+  登录结果，如图所示：
 
+  ![image-20210202143251160](F:\ReactJs\01-basic\assets\image-20210202143251160.png)
 
+  查看登录账户，如下所示：
 
+  ```powershell
+  npm whoami
+  ```
 
-* 基于模板生成包的结构
+  ![image-20210202143411662](F:\ReactJs\01-basic\assets\image-20210202143411662.png)
 
+* 查看当前的镜像源
+
+  ```powershell
+  npm config get registry
+  ```
+
+  查看是否是npm官网，如果不是的话，需要将镜像源修改回来
+
+  ![image-20210202142830517](F:\ReactJs\01-basic\assets\image-20210202142830517.png)
+
+# Vue 组件的单元测试
+
+## 组件单元测试的好处
+
+* 提供描述组件行为的文档
+* 节省手动测试的时间
+* 减少研发新特性时产生的bug
+* 改进设计
+* 促进重构
+
+## 安装依赖
+
+* `Vue Test Utils`：Vue提供的组件单元测试官方库，需要结合单元测试框架一起使用
+
+* `Jest`：FaceBook 开发的单元测试框架
+
+* `vue-jest`：预处理器
+
+* `babel-jest`：对测试代码进行降级处理，即将 ES6 语法转换为 ES5等
+
+* 安装
+
+  ```powershell
+  yarn add jest @vue/test-utils vue-jest babel-jest -D -W
+  ```
+
+## 配置测试脚本
+
+* `package.json`
+
+  ```json
+  "scripts": {
+      "test": "jest"
+  }
+  ```
+
+## Jest 配置文件
+
+* `jest.config.js`
+
+  ```js
+  module.exports = {
+      // 用哪里找测试文件
+      "testMatch": ["**/__tests__/**/*.[jt]s?(x)"],
+      // 测试文件中导入的模块后缀
+      "moduleFileExtensions": [
+          "js",
+          "json",
+          // 告诉 Jest 处理 `*.vue` 文件
+          "vue"
+      ],
+      "transform": {
+          // 用 `vue-jest` 处理 `*.vue` 文件
+          ".*\\.(vue)$": "vue-jest",
+          // 用 `babel-jest` 处理 js
+          ".*\\.(js)$": "babel-jest"
+      }
+  }
+  ```
+
+## Babel 配置文件
+
+* `babel.config.js`
+
+  ```js
+  module.exports = {
+      presets: [
+          [
+              '@babel/preset-env'
+          ]
+      ]
+  }
+  ```
+
+Babel 桥接
+
+* 安装 Babel 的桥接依赖
+
+  ```powershell
+  yarn add babel-core@bridge -D -W
+  ```
+
+## Jest 常用 API
+
+* 全局函数
+  * describe(name, fn)                  把相关测试组合在一起
+  * test(name, fn)                          测试方法
+  * expect(value)                           断言
+* 匹配器
+  * toBe(value)                              判断值是否相等
+  * toEqual(obj)                             判断对象是否相等
+  * toContain(value)                      判断数组或者字符串中是否包含
+  * ......
+* 快照
+  * toMatchSnapshot()
+
+## Vue Test Utils 常用 API
+
+* mount()
+  * 创建一个包含被挂载和渲染的 Vue 组件的 Wrapper
+* Wrapper 
+  * vm                                             wrapper 包裹的组件实例
+  * props()                                       返回 Vue 实例选项中的 props 对象
+  * html()                                         组件生成的 HTML 标签
+  * find()                                          通过选择器返回匹配到的组件中的 DOM 元素
+  * trigger()                                      触发 DOM 原生事件，自定义事件 wrapper.vm.$emit()
+  * ......
+
+## 编写测试文件
+
+* `__tests__/input.test.js`
+
+  ```js
+  import input from '../src/input.vue'
+  import { mount } from '@vue/test-utils'
   
+  describe('lg-input', () => {    
+      test('input-text', () => {
+          const wrapper = mount(input)
+          expect(wrapper.html()).toContain('input type="text"')
+      })
+  
+      test('input-password', () => {
+          const wrapper = mount(input, {
+              propsData: {
+                  type: "password"
+              }
+          })
+          expect(wrapper.html()).toContain('input type="password"')
+      })
+  
+      test('input-password', () => {
+          const wrapper = mount(input, {
+              propsData: {
+                  type: "password",
+                  value: 'admin'
+              }
+          })
+          expect(wrapper.props('value')).toBe('admin')
+      })
+  
+      test('input-snapshot', () => {
+          const wrapper = mount(input, {
+              propsData: {
+                  type: "password",
+                  value: 'admin'
+              }
+          })
+          expect(wrapper.vm.$el).toMatchSnapshot()
+      })
+  })
+  ```
 
-* 组件测试
+  执行 `yarn test`，测试结果，如图所示：
+
+  ![image-20210202154359188](F:\LaGou\03-module\04-min-module\assets\image-20210202154359188.png)
+
+  生成的快照文件，如图所示：
+
+  ![image-20210202154503842](F:\LaGou\03-module\04-min-module\assets\image-20210202154503842.png)
+
+# Rollup
+
+## 基本介绍
+
+* Rollup 是一个模块打包器
+* Rollup 支持 Tree-shaking
+* 打包的结果比 Webpack 要小
+* 开发框架／组件库的时候使用 Rollup 更合适
+
+## 安装依赖
 
 * Rollup
 
+* rollup-plugin-terser：对代码进行压缩
+
+* rollup-plugin-vue@5.1.9：把单文件组件编译成 js 代码，注意：一定要指定版本
+
+* vue-template-compiler：编译器
+
+* 安装
+
+  ```powershell
+  yarn add rollup rollup-plugin-terser rollup-plugin-vue@5.1.9 vue-template-compiler -D -W
+  ```
+
+## Rollup 配置文件
+
+* 在 button 目录中创建 `rollup.config.js`
+
+  ```js
+  import { terser } from 'rollup-plugin-terser'
+  import vue from 'rollup-plugin-vue'
+  
+  module.exports = [
+      {
+          input: 'index.js',
+          output: [
+              {
+                  file: 'dist/index.js',
+                  format: 'es'
+              }
+          ],
+          plugins: [
+              vue({
+                  // Dynamically inject css as a <style> tag
+                  css: true, 
+                  // Explicitly convert template to render function
+                  compileTemplate: true
+              }),
+              terser()
+          ]
+      }
+  ]
+  ```
+
+## 打包命令
+
+**打包单个组件**
+
+* 组件目录的 `package.json` 中配置 `scripts`
+
+  ```json
+  "scripts": {
+      "build": "rollup -c"
+  }
+  ```
+
+* 进入 `button` 目录下，执行打包命令
+
+  ```powershell
+  yarn workspace alison-button run build
+  ```
+
+**打包所有组件**
+
+* 安装依赖
+
+  ```powershell
+  yarn add @rollup/plugin-json rollup-plugin-postcss @rollup/plugin-node-resolve -D -W
+  ```
+
+* 项目根目录创建 `rollup.config.js`
+
+  ```js
+  import fs from 'fs'
+  import path from 'path'
+  import json from '@rollup/plugin-json'
+  import vue from 'rollup-plugin-vue'
+  import postcss from 'rollup-plugin-postcss'
+  import { terser } from 'rollup-plugin-terser'
+  import { nodeResolve } from '@rollup/plugin-node-resolve'
+  
+  const isDev = process.env.NODE_ENV !== 'production'
+  
+  // 公共插件配置
+  const plugins = [
+      vue({
+          // Dynamically inject css as a <style> tag
+          css: true,
+          // Explicitly convert template to render function
+          compileTemplate: true
+      }),
+      json(),
+      nodeResolve(),
+      postcss({
+          // 把 css 插入到 style 中
+          // inject: true,
+          // 把 css 放到和js同一目录
+          extract: true
+      })
+  ]
+  
+  // 如果不是开发环境，开启压缩
+  isDev || plugins.push(terser())
+  
+  // packages 文件夹路径
+  const root = path.resolve(__dirname, 'packages')
+  
+  module.exports = fs.readdirSync(root)
+  // 过滤，只保留文件夹
+      .filter(item => fs.statSync(path.resolve(root, item)).isDirectory())
+  // 为每一个文件夹创建对应的配置
+      .map(item => {
+      const pkg = require(path.resolve(root, item, 'package.json'))
+      return {
+          input: path.resolve(root, item, 'index.js'),
+          output: [
+              {
+                  exports: 'auto',
+                  file: path.resolve(root, item, pkg.main),
+                  format: 'cjs'
+              },
+              {
+                  exports: 'auto',
+                  file: path.join(root, item, pkg.module),
+                  format: 'es'
+              },
+          ],
+          plugins: plugins
+      }
+  })
+  ```
+
+* 在每一个包中设置 `package.json` 中的 `main` 和 `module` 字段
+
+  ```js
+  {
+      "main": "dist/cjs/index.js",
+  	"module": "dist/es/index.js"
+  }
+  ```
+
+* 根目录的 `package.json` 中配置 `scripts`
+
+  ```json
+  "scripts": {
+      "build": "rollup -c"
+  }
+  ```
+
+* 根目录下，启动服务
+
+  ```powershell
+  yarn build
+  ```
+
+# 设置环境变量
+
+* 安装 `cross-env`
+
+  ```powershell
+  yarn add cross-env -D -W
+  ```
+
+* 根目录的 `package.json` 中配置 `scripts`
+
+  ```json
+  "scripts": {
+      "build:prod": "cross-env NODE_ENV=production rollup -c",
+      "build:dev": "cross-env NODE_ENV=development rollup -c"
+  },
+  ```
+
+* 启动构建
+
+  ```powershell
+  # 生产环境打包
+  yarn build:prod
+  
+  # 开发环境打包
+  yarn build:dev
+  ```
+
+# 清理指定文件
+
+* 安装 `rimraf`
+
+  ```powershell
+  yarn add rimraf -D -W
+  ```
+
+* 在每个组件目录的 `package.json` 中配置 `scripts`
+
+  ```json
+  "scripts": {
+      "del": "rimraf dist"
+  },
+  ```
+
+  > `dist` ：是指要被删除的目录
+
+* 批量执行每个组件的 `del` 命令
+
+  ```powershell
+  yarn workspaces run del
+  ```
+
+# 基于模板生成组件结构
+
+使用 plop 创建模板，具体用法，参考网址：[https://blog.csdn.net/zimeng303/article/details/110037847](https://blog.csdn.net/zimeng303/article/details/110037847)
+
+* 安装 `plop` 
+
+  ```powershell
+  yarn add plop -D -W
+  ```
+
+* 模板目录结构，如图所示：
+
+  ![image-20210202170553918](F:\LaGou\03-module\04-min-module\assets\image-20210202170553918.png)
+
+* `__tests/component.test.hbs`
+
+  ```js
+  import { mount } from '@vue/test-utils'
+  import Element from '../src/{{name}}.vue'
+  
+  describe('Lg-{{properCase name}}', () => {
+  })
+  ```
+
+* `src/component.hbs`
+
+  ```html
+  <template>
+      <div>
+  
+      </div>
+  </template>
+  
+  <script>
+      export default {
+          name: 'Lg{{properCase name}}',
+          props: {}
+      }
+  </script>
+  
+  <style>
+  </style>
+  ```
+
+* `stories/component.stories.hbs`
+
+  ```js
+  import Lg{{properCase name}} from '../src/{{name}}.vue'
+  
+  export default {
+      title: 'Lg{{properCase name}}',
+      component: Lg{{properCase name}}
+  }
+  
+  export const {{properCase name}} = _ => ({
+      components: { Lg{{properCase name}} },
+      template: `
+          <div>
+          	<lg-{{name}}></lg-{{name}}>
+          </div>
+  	`
+  })
+  ```
+
+* `index.hbs`
+
+  ```js
+  import Lg{{properCase name}} from './src/{{name}}.vue'
+  
+  Lg{{properCase name}}.install = Vue => {
+      Vue.component(Lg{{properCase name}}.name, Lg{{properCase name}})
+  }
+  
+  export default Lg{{properCase name}}
+  ```
+
+* `LICENSE`，固定写法
+
+  ```markdown
+  The MIT License (MIT)
+  
+  Copyright (c) 2020-present
+  
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+  
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+  
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+  THE SOFTWARE.
+  ```
+
+* `package.hbs`
+
+  ```json
+  {
+      "name": "lg-{{name}}",
+      "version": "0.0.0",
+      "description": "lg-{{name}} component",
+      "main": "dist/cjs/index.js",
+      "module": "dist/es/index.js",
+      "license": "MIT",
+      "scripts": {
+          "test": "echo \"Error: no test specified\" && exit 1"
+      },
+      "dependencies": {
+      },
+      "keywords": []
+  }
+  ```
+
+* 在根目录配置 plop 的配置文件 `plopfile.js`
+
+  ```js
+  module.exports = plop => {
+      plop.setGenerator('component', {
+          description: 'create a custom component',
+          prompts: [
+              {
+                  type: 'input',
+                  name: 'name',
+                  message: 'component name',
+                  default: 'MyComponent'
+              }
+          ],
+          actions: [
+              {
+                  type: 'add',
+                  path: 'packages/{{name}}/src/{{name}}.vue',
+                  templateFile: 'plop-template/component/src/component.hbs'
+              },
+              {
+                  type: 'add',
+                  path: 'packages/{{name}}/__tests__/{{name}}.test.js',
+                  templateFile: 'plop-template/component/__tests__/component.test.hbs'
+              },
+              {
+                  type: 'add',
+                  path: 'packages/{{name}}/stories/{{name}}.stories.js',
+                  templateFile: 'plop-template/component/stories/component.stories.hbs'
+              },
+              {
+                  type: 'add',
+                  path: 'packages/{{name}}/index.js',
+                  templateFile: 'plop-template/component/index.hbs'
+              },
+              {
+                  type: 'add',
+                  path: 'packages/{{name}}/LICENSE',
+                  templateFile: 'plop-template/component/LICENSE'
+              },
+              {
+                  type: 'add',
+                  path: 'packages/{{name}}/package.json',
+                  templateFile: 'plop-template/component/package.hbs'
+              },
+              {
+                  type: 'add',
+                  path: 'packages/{{name}}/README.md',
+                  templateFile: 'plop-template/component/README.hbs'
+              }
+          ]
+      })
+  }
+  ```
+
+* 在根目录的 `package.json` 中配置 `scripts`
+
+  ```json
+  "scripts": {
+      "plop": "plop"
+  },
+  ```
+
+* 启动 plop，生成组件
+
+  ```powershell
+  yarn plop
+  ```
+
+  执行命令过程中，输入名称，如图所示：
+
+  ![image-20210202172350407](F:\LaGou\03-module\04-min-module\assets\image-20210202172350407.png)
+
+  生成的组件目录结构，如图所示：
+
+  ![image-20210202172443196](F:\LaGou\03-module\04-min-module\assets\image-20210202172443196.png)
