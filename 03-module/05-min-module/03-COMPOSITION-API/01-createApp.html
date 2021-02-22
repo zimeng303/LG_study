@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        x：{{ x }}
+        y：{{ y }}
+    </div>
+    <script type="module">
+        import { createApp, reactive, onMounted, onUnmounted, toRefs } from './node_modules/vue/dist/vue.esm-browser.js'
+
+        function useMousePosition() {
+            // 第一个参数 props，响应式对象，不能结构
+            // 第二个参数 context，attrs，emit，slots
+
+            // reactive 对象创建响应式对象
+            const position = reactive({
+                x: 0,
+                y: 0
+            })
+
+            const update = e => {
+                position.x = e.pageX
+                position.y = e.pageY
+            }
+
+            onMounted(() => {
+                window.addEventListener('mousemove', update)
+            })
+
+            // 对应 Vue 2.x 中的destoryed
+            onUnmounted(() => {
+                window.addEventListener('mouseover', update)
+            })
+
+            // toRefs 把一个对象中的所有属性的值，都转换成响应式的对象
+            // toRefs 要求传入的必须是一个代理对象
+            return toRefs(position)
+        }
+
+        // createApp() 创建 Vue 对象
+        const app = createApp({
+            // setup 对象是 createApp 的入口
+            setup() {
+                // const position = useMousePosition()
+                // 每一个对象都有一个value 的属性，在模板中可以省略，但是在代码中不可以省略
+                const { x, y } = useMousePosition()
+                return {
+                    x,
+                    y
+                }
+            }
+        })
+        console.log(app);
+
+        // =》Vue 2.x 中的$mount
+        app.mount("#app")
+    </script>
+</body>
+
+</html>

@@ -235,7 +235,7 @@
 
 **展示效果**
 
-![image-20210128163017063](C:\Users\86135\AppData\Roaming\Typora\typora-user-images\image-20210128163017063.png)
+![image-20210128163017063](F:\LaGou\03-module\04-min-module\assets\image-20210128163017063.png)
 
 ### 代码实现
 
