@@ -144,6 +144,7 @@ eventHandler () {}
 ```react
 class App extends Component {
   render() {
+    {/* 复合单词，使用驼峰方式 */}
     const style = {width: 200, height: 200, backgroundColor: 'red'};
     return <div style={style}></div>
   }
@@ -154,11 +155,18 @@ class App extends Component {
 
 ```react
 // Button.js
+// 样式文件命名为 xxx.module.css，表示只适用于xxx文件内
 import styles from './Button.module.css';
 class Button extends Component {
   render() {
     return <button className={styles.error}>Error Button</button>;
   }
+}
+
+// Button.module.css
+.error {
+    width: 100px;
+    
 }
 ```
 
