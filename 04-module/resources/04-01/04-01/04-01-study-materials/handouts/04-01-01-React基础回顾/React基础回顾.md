@@ -166,7 +166,7 @@ class Button extends Component {
 // Button.module.css
 .error {
     width: 100px;
-    
+    height: 100px;
 }
 ```
 
@@ -386,7 +386,7 @@ const Person = (props) => {
 
 ##### 3.3.4 单向数据流
 
-1.  在React中, 关于数据流动有一条原则, 就是单向数据流动, 自顶向下, 从父组件到子组件.
+1.  在React中, 关于数据流动有一条原则, 就是单向数据流动, 自顶向下, 从父组件到子组件. 
 
 2.  单向数据流特性要求我们共享数据要放置在上层组件中.
 
@@ -494,8 +494,6 @@ const Person = props => {
 #### 3.5 类组件生命周期函数
 
 <img src="./images/4.jpg"/>
-
-
 
 在组件完成更新之前需要做某种逻辑或者计算，就需要用到快照
 
@@ -632,7 +630,7 @@ class App extends Component {
 }
 ```
 
-### 5. 路由
+### 5. 路由--
 
 url地址与组件之间的对应关系，访问不同的url地址显示不同的组件。
 
