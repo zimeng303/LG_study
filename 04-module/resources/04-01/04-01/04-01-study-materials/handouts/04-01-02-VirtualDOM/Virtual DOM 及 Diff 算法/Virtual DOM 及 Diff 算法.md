@@ -90,6 +90,8 @@ React.createElement(
 
 Virtual DOM 对象的更新和比较仅发生在内存中，不会在视图中渲染任何内容，所以这一部分的性能损耗成本是微不足道的。
 
+![image-20210709104349104](E:\LG_study\04-module\resources\04-01\04-01\04-01-study-materials\handouts\04-01-02-VirtualDOM\Virtual DOM 及 Diff 算法\images\image-20210709104349104.png)
+
 <img src="./images/1.png" style="margin: 20px 0;width: 80%"/>
 
 ```react
@@ -157,11 +159,11 @@ const after = {
  * @return {object} Virtual DOM
  */
 function createElement (type, props, ...children) {
-	return {
-    type,
-    props,
-    children
-  } 
+    return {
+        type,
+        props,
+        children
+    } 
 }
 ```
 

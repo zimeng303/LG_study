@@ -630,11 +630,15 @@ class App extends Component {
 }
 ```
 
-### 5. 路由--
+### 5. 路由
 
 url地址与组件之间的对应关系，访问不同的url地址显示不同的组件。
 
-下载：`npm install react-router-dom`
+下载：
+
+```powershell
+npm install react-router-dom
+```
 
 #### 5.1.1 路由基本使用
 
@@ -643,24 +647,26 @@ url地址与组件之间的对应关系，访问不同的url地址显示不同�
 import React from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 function Index() {
-	return <div>首页</div>;
+    return <div>首页</div>;
 }
 function News() {
-	return <div>新闻</div>;
+    return <div>新闻</div>;
 }
 function App() {
-  return (
-    <Router>
-      <div>
-        <Link to="/index">首页</Link>
-        <Link to="/news">新闻</Link>
-      </div>
-      <div>
-        <Route path="/index" component={Index}/>
-        <Route path="/news" component={News}/>
-      </div>
-    </Router>
-  );
+    return (
+        {/* 所有组件的最外层 */}
+        <Router>
+            <div>
+                <Link to="/index">首页</Link>
+                <Link to="/news">新闻</Link>
+            </div>
+            <div>
+                {/* Route 设置和匹配路由规则 */}
+                <Route path="/index" component={Index}/>
+                <Route path="/news" component={News}/>
+            </div>
+        </Router>
+    );
 }
 ```
 
@@ -668,25 +674,27 @@ function App() {
 
 ```react
 function News(props) {
-  return (
-    <div>
-      <div>
-        <Link to={`${props.match.url}/company`}>公司新闻</Link>
-        <Link to={`${props.match.url}/industry`}>行业新闻</Link>
-      </div>
-      <div>
-        <Route path={`${props.match.path}/company`} component={CompanyNews} />
-        <Route path={`${props.match.path}/industry`} component={IndustryNews}/>  
-      </div>	
-    </div>
-  );
+    return (
+        <div>
+            <div>
+                {/* props.match.url 获取上一级的路由地址，即 Link组件中to属性的值 */}
+                <Link to={`${props.match.url}/company`}>公司新闻</Link>
+                <Link to={`${props.match.url}/industry`}>行业新闻</Link>
+            </div>
+            <div>                
+                {/* props.match.path 获取上一级的路由地址，即 Route组件中 path属性的值 */}
+                <Route path={`${props.match.path}/company`} component={CompanyNews} />
+                <Route path={`${props.match.path}/industry`} component={IndustryNews}/>  
+            </div>	
+        </div>
+    );
 }
 
 function CompanyNews() {
-	return <div>公司新闻</div>
+    return <div>公司新闻</div>
 }
 function IndustryNews() {
-	return <div>行业新闻</div>
+    return <div>行业新闻</div>
 }
 ```
 
