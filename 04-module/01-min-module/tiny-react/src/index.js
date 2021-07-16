@@ -1,5 +1,7 @@
 import TinyReact from './TinyReact'
 
+const root = document.getElementById("root")
+
 const virtualDOM = (
   <div className="container">
     <h1>你好 Tiny React</h1>
@@ -13,7 +15,19 @@ const virtualDOM = (
     <span>这是一段内容</span>
     <button onClick={() => alert("你好")}>点击我</button>
     <h3>这个将会被删除</h3>
-    2, 3
+    2, 3 
+    <input type="text" value="12" />
   </div>
 )
-console.log(virtualDOM);
+
+// TinyReact.render(virtualDOM, root)
+
+function Demo () {
+  return <div>Hello</div>
+}
+
+function Heart () {
+  return <Demo />
+}
+
+TinyReact.render(<Heart />, root)
