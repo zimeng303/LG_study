@@ -15,19 +15,32 @@ const virtualDOM = (
     <span>这是一段内容</span>
     <button onClick={() => alert("你好")}>点击我</button>
     <h3>这个将会被删除</h3>
-    2, 3 
+    2, 3
     <input type="text" value="12" />
   </div>
 )
 
 // TinyReact.render(virtualDOM, root)
 
-function Demo () {
+function Demo() {
   return <div>Hello</div>
 }
 
-function Heart () {
-  return <Demo />
+function Heart(props) {
+  return (
+    <div>
+      {props.title}
+      &hearts; <Demo />
+    </div>
+  )
 }
 
-TinyReact.render(<Heart />, root)
+// TinyReact.render(<Heart title="Hello React" />, root)
+
+class Alert extends TinyReact.Component {
+  render(){
+    return <div>Hello React</div>
+  }
+}
+
+TinyReact.render(<Alert />, root)
