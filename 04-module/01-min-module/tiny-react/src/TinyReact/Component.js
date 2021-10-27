@@ -1,3 +1,5 @@
-export default class component {
-  
+export default class Component {
+  constructor (props) {
+    this.props = props
+  }
 }
