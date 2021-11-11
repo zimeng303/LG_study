@@ -682,6 +682,8 @@ else if (oldVirtualDOM && virtualDOM.type === oldVirtualDOM.type) {
 
 <img src="./images/7.png"/>
 
+`**深度优先比对规则，即：子节点优先同级节点比对**`
+
 #### 9.2 Virtual DOM 类型不同
 
 当对比的元素节点类型不同时，就不需要继续对比了，直接使用新的 Virtual DOM 创建 DOM 对象，用新的 DOM 对象直接替换旧的 DOM 对象。当前这种情况要将组件刨除，组件要被单独处理。
@@ -874,13 +876,15 @@ setState(state) {
 
 在 diff 方法中判断要更新的 Virtual DOM 是否是组件。
 
-如果是组件再判断要更新的组件和未更新前的组件是否是同一个组件，如果不是同一个组件就不需要做组件更新操作，直接调用 mountElement 方法将组件返回的 Virtual DOM 添加到页面中。
+如果是组件，再判断要更新的组件和未更新前的组件是否是同一个组件：
 
-如果是同一个组件，就执行更新组件操作，其实就是将最新的 props 传递到组件中，再调用组件的render方法获取组件返回的最新的 Virtual DOM 对象，再将 Virtual DOM 对象传递给 diff 方法，让 diff 方法找出差异，从而将差异更新到真实 DOM 对象中。
+​	如果不是同一个组件就不需要做组件更新操作，直接调用 `mountElement` 方法将组件返回的 Virtual DOM 添加到页面中。
+
+​	如果是同一个组件，就执行更新组件操作，其实就是将最新的 props 传递到组件中，再调用组件的 `render` 方法获取组件返回的最新的 Virtual DOM 对象，再将 Virtual DOM 对象传递给 diff 方法，让 diff 方法找出差异，从而将差异更新到真实 DOM 对象中。
 
 在更新组件的过程中还要在不同阶段调用其不同的组件生命周期函数。
 
-在 diff 方法中判断要更新的 Virtual DOM 是否是组件，如果是组件又分为多种情况，新增 diffComponent 方法进行处理
+在 diff 方法中判断要更新的 Virtual DOM 是否是组件，如果是组件又分为多种情况，新增 `diffComponent` 方法进行处理
 
 ```react
 else if (typeof virtualDOM.type === "function") {
