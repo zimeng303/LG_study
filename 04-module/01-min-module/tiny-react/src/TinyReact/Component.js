@@ -15,7 +15,6 @@ export default class Component {
     let container = oldDOM.parentNode
     // 实现对比
     diff(virtualDOM, container, oldDOM)
-
   }
   // 保存旧的 DOM 对象
   setDOM(dom) {

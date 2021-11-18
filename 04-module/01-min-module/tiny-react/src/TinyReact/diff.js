@@ -68,6 +68,10 @@ export default function diff(virtualDOM, container, oldDOM) {
             if (oldDOM.childNodes[i] && oldDOM.childNodes[i] !== domElement) {
               oldDOM.insertBefore(domElement, oldDOM.childNodes[i])
             }
+          } else {
+            console.log(child, oldDOM);
+            // 新增元素
+            mountElement(child, oldDOM, oldDOM.childNodes[i])
           }
         }
       })
@@ -78,12 +82,30 @@ export default function diff(virtualDOM, container, oldDOM) {
     let oldChildNodes = oldDOM.childNodes
     // 判断旧节点的数量
     if (oldChildNodes.length > virtualDOM.children.length) {
-      // 有节点需要被删除
-      for (
-        let i = oldChildNodes.length - 1;
-        i > virtualDOM.children.length - 1;
-        i--) {
-        unmountNode(oldChildNodes[i])
+      if (hasNoKey) {
+        // 有节点需要被删除
+        for (
+          let i = oldChildNodes.length - 1;
+          i > virtualDOM.children.length - 1;
+          i--) {
+          unmountNode(oldChildNodes[i])
+        }
+      } else {
+        // 推过 key 属性删除节点
+        for (let i = 0; i < oldChildNodes.length; i++) {
+          let oldChild = oldChildNodes[i]
+          let oldChildKey = oldChild._virtualDOM.props.key
+          let found = false
+          for (let n = 0; n < virtualDOM.children.length; n++) {
+            if (oldChildKey === virtualDOM.children[n].props.key) {
+              found = true
+              break
+            }
+          }
+          if (!found) {
+            unmountNode(oldChild)
+          }
+        }
       }
     }
   }

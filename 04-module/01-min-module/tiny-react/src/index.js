@@ -143,13 +143,18 @@ class KeyDemo extends TinyReact.Component {
 
   handleClick() {
     const newState = JSON.parse(JSON.stringify(this.state))
-    newState.persons.push(newState.persons.shift())
-    // newState.persons.splice(1, 0, { id: 2, name: "李逵" })
+    // newState.persons.push(newState.persons.shift())
+    // newState.persons.splice(1, 0, { id: 100, name: "李逵" })
+    newState.persons.pop()
     this.setState(newState)
   }
 
   componentDidMount() {
     console.log("componentDidMount");
+  }
+
+  componentWillUnmount() {
+    console.log("componentWillUnmount");
   }
 
   render() {
@@ -158,7 +163,10 @@ class KeyDemo extends TinyReact.Component {
         <ul>
           {
             this.state.persons.map(person => (
-              <li key={person.id}>{person.name}</li>
+              <li key={person.id}>
+                {person.name}
+                <DemoRef />
+              </li>
             ))
           }
         </ul>
