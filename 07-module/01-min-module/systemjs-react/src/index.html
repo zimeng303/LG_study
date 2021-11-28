@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <!-- type="systemjs-importmap" 是systemjs提供的，不存在浏览器兼容问题 -->
+  <!-- 指定公共模块的加载地址 -->
+  <script type="systemjs-importmap">    
+    {
+      "imports": {
+          "react":
+          "https://cdn.jsdelivr.net/npm/react/umd/react.production.min.js",
+          "react-dom": "https://cdn.jsdelivr.net/npm/react-dom/umd/reactdom.production.min.js",
+          "react-router-dom": "https://cdn.jsdelivr.net/npm/react-routerdom@5.2.0/umd/react-router-dom.min.js"
+      }
+  }
+  </script>
+  <!-- 引入 systemjs -->
+  <script src="https://cdn.jsdelivr.net/npm/systemjs@6.8.0/dist/system.min.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script>
+    // 引入入口文件
+    System.import("./index.js")
+  </script>
+</body>
+</html>
