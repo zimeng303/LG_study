@@ -1,28 +1,41 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <Parcel :config="parcelConfig" :mountParcel="mountParcel" />
+    <div>
+      <router-link to="/foo">foo</router-link>
+      <router-link to="/bar">bar</router-link>
+      <button @click="handleClick">button</button>
+    </div>
+    <router-view />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Parcel from "single-spa-vue/dist/esm/parcel";
+import { mountRootParcel } from "single-spa";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    HelloWorld
-  }
-}
+    Parcel,
+  },
+  data() {
+    return {
+      parcelConfig: window.System.import("@study/navbar"),
+      mountParcel: mountRootParcel,
+    };
+  },
+  methods: {
+    async handleClick() {
+      const toolsModule = await window.System.import("@study/tools");
+      toolsModule.sayHello("@study/tools");
+    },
+  },
+  async mounted() {
+    const toolsModule = await window.System.import("@study/tools");
+    toolsModule.sharedSubject.subscribe(console.log);
+  },
+};
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
+<style></style>

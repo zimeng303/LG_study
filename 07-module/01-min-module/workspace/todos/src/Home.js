@@ -1,9 +1,29 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+
+function useToolsModule () {
+  const [toolsModule, setToolsModules] = useState()
+   useEffect(() => {
+     System.import("@study/tools").then(setToolsModules)
+   }, [])
+
+   return toolsModule
+}
 
 const Home = () => {
+  const toolsModule = useToolsModule()
+  useEffect(() => {
+    let subjection = null
+    if (toolsModule) {
+      toolsModule.sayHello("@study/todos")
+      subjection = toolsModule.sharedSubject.subscribe(console.log)
+    }
+    return () => subjection.unsubscribe()
+  }, [])
+  
   return (
     <div>
       Home works
+      <button onClick={() => toolsModule.sharedSubject.next("Hello Hello Hello")}>button</button>
     </div>
   )
 }

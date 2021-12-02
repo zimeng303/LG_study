@@ -40,7 +40,8 @@
         "react-dom": "https://cdn.jsdelivr.net/npm/react-dom@17.0.2/umd/react-dom.production.min.js",
         "react-router-dom": "https://cdn.jsdelivr.net/npm/react-router-dom@5.2.0/umd/react-router-dom.min.js",
         "vue": "https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js",
-        "vue-router": "https://cdn.jsdelivr.net/npm/vue-router@3.0.7/dist/vuerouter.min.js"     
+        "vue-router": "https://cdn.jsdelivr.net/npm/vue-router@3.0.7/dist/vue-router.min.js",
+        "rxjs": "https://cdn.jsdelivr.net/npm/rxjs@6.6.3/bundles/rxjs.umd.min.js"     
       }
     }
   </script>
@@ -56,7 +57,10 @@
         "@study/root-config": "//localhost:9000/study-root-config.js",
         "@study/lagou": "//localhost:9001/study-lagou.js",
         "@study/todos": "//localhost:9002/study-todos.js",
-        "@study/realworld": "//localhost:9003/js/app.js"
+        "@study/realworld": "//localhost:9003/js/app.js",
+        "@study/navbar": "//localhost:9004/study-navbar.js",
+        "@study/tools": "//localhost:9005/study-tools.js",
+        "@single-spa/welcome": "https://unpkg.com/single-spa-welcome/dist/single-spa-welcome.js"
       }
     }
   </script>
@@ -82,6 +86,28 @@
   <noscript>
     You need to enable JavaScript to run this app.
   </noscript>
+  <template id="single-spa-layout">
+    <single-spa-router>
+      <!-- 公共组件放置 -->
+      <application name="@study/navbar"></application>
+      <!-- 默认路由配置 -->
+      <route default>
+        <!-- application 路由组件 -->
+        <application name="@single-spa/welcome"></application>
+      </route>
+      <!-- path：路由地址 -->
+      <route path="lagou">
+        <!-- name: 应用组件名称 -->
+        <application name="@study/lagou"></application>
+    </route>
+    <route path="todos">
+        <application name="@study/todos"></application>
+    </route>
+    <route path="realworld">
+        <application name="@study/realworld"></application>
+    </route>
+    </single-spa-router>
+  </template>
   <main></main>
   <div id="root"></div>
   <script>

@@ -1,9 +1,10 @@
-import { 
-  BrowserRouter, 
-  Route, 
-  Link, 
-  Redirect, 
-  Switch 
+import Parcel from 'single-spa-react/parcel'
+import {
+  BrowserRouter,
+  Route,
+  Link,
+  Redirect,
+  Switch
 } from 'react-router-dom'
 import Home from './Home'
 import About from './About'
@@ -11,6 +12,7 @@ import About from './About'
 export default function Root(props) {
   return (
     <BrowserRouter basename="/todos">
+      <Parcel config={System.import("@study/navbar")} />
       <div>
         <Link to="/home">Home</Link>
         <Link to="/about">About</Link>

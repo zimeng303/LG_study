@@ -9,8 +9,8 @@
     "serve:standalone": "vue-cli-service serve --mode standalone"
   },
   "dependencies": {
-    "core-js": "^3.6.5",
-    "single-spa-vue": "^2.1.0",
+    "core-js": "^3.19.1",
+    "single-spa-vue": "^2.5.1",
     "vue": "^2.6.11"
   },
   "devDependencies": {
