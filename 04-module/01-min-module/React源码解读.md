@@ -15,8 +15,12 @@
 3. 克隆 react 官方源码 (在项目的根目录下进行克隆)
 
    ````powershell
-   git clone --branch v16.13.1 --depth=1 https://github.com/facebook/react.git src/react
+   git clone --branch v16.3.1 --depth=1 https://github.com/facebook/react.git src/react
    ````
+
+   **注意：**`react 的版本要和项目中的保持一致`
+
+   <img src="C:\Users\86135\AppData\Roaming\Typora\typora-user-images\image-20220303155055561.png" alt="image-20220303155055561" />
 
 4. 链接本地源码
 
@@ -164,7 +168,7 @@
 
     > Settings > Extensions > Prettier > Prettier path
     >
-    > ![image-20220303141104558](F:\LaGou\04-module\01-min-module\assets\2.png)
+    > <img src="C:\Users\86135\AppData\Roaming\Typora\typora-user-images\image-20220303155055561.png" alt="image-20220303155055561" style="zoom:50%;" />
 
 15. \_\_DEV\_\_ 报错
 
