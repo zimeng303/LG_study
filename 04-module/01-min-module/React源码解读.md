@@ -15,12 +15,8 @@
 3. 克隆 react 官方源码 (在项目的根目录下进行克隆)
 
    ````powershell
-   git clone --branch v16.3.1 --depth=1 https://github.com/facebook/react.git src/react
+   git clone --branch v17.0.2 --depth=1 https://github.com/facebook/react.git src/react
    ````
-
-   **注意：**`react 的版本要和项目中的保持一致`
-
-   <img src="C:\Users\86135\AppData\Roaming\Typora\typora-user-images\image-20220303155055561.png" alt="image-20220303155055561" />
 
 4. 链接本地源码
 
@@ -172,7 +168,13 @@
 
 15. \_\_DEV\_\_ 报错
 
-    > 删除 node_modules 文件夹，执行 **`npm install`**
+> 删除 node_modules 文件夹，执行 **`npm install`**
+
+16. 建议
+
+> 创建项目后，如果 react 版本为 17.x.x，建议将版本降到 16.x.x，具体版本如下：
+>
+> ![image-20220303193951760](F:\LaGou\04-module\01-min-module\assets\3.png)
 
 ## 2. 创建 React 元素
 
