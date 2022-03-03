@@ -59,7 +59,10 @@
 
 6. 告诉 babel 在转换代码时忽略类型检查
 
-   `npm install @babel/plugin-transform-flow-strip-types -D`
+   ```powershell
+   # 下载插件
+   npm install @babel/plugin-transform-flow-strip-types -D
+   ```
 
    ```javascript
    // 文件位置: react-test/config/webpack.config.js [babel-loader]
