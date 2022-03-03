@@ -1,4 +1,4 @@
-## 1. 配置 React 源码本地调试环境
+配置 React 源码本地调试环境
 
 1. 使用 create-react-app 脚手架创建项目
 
@@ -14,7 +14,7 @@
 
 3. 克隆 react 官方源码 (在项目的根目录下进行克隆)
 
-   ````
+   ````powershell
    git clone --branch v16.13.1 --depth=1 https://github.com/facebook/react.git src/react
    ````
 
@@ -152,21 +152,23 @@
 
     如果你的 vscode 编辑器安装了 prettier 插件并且在保存 react 源码文件时右下角出现如下错误，按照如下步骤解决
 
-    <img src="./images/1.png" width="60%" align="left"/>
+    ![image-20220303140818328](F:\LaGou\04-module\01-min-module\assets\1.png)
 
-    1. 全局安装 prettier
+    * 1. 全局安装 `prettier`
 
-       `npm i prettier -g`
+      ```powershell
+      npm i prettier -g
+      ```
 
-    2. 配置 prettier path
+    * 2. 配置 `prettier path`
 
-       Settings > Extensions > Prettier > Prettier path
-
-       <img src="./images/2.png" width="80%" align="left"/>
+    > Settings > Extensions > Prettier > Prettier path
+    >
+    > ![image-20220303141104558](F:\LaGou\04-module\01-min-module\assets\2.png)
 
 15. \_\_DEV\_\_ 报错
 
-    删除 node_modules 文件夹，执行 npm install
+    > 删除 node_modules 文件夹，执行 **`npm install`**
 
 ## 2. 创建 React 元素
 
