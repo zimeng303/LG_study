@@ -67,8 +67,7 @@ function getClientEnvironment(publicUrl) {
       (env, key) => {
         env[key] = process.env[key];
         return env;
-      },
-      {
+      }, {
         // Useful for determining whether we’re running in production mode.
         // Most importantly, it switches React into the correct mode.
         NODE_ENV: process.env.NODE_ENV || 'development',
@@ -96,9 +95,23 @@ function getClientEnvironment(publicUrl) {
       env[key] = JSON.stringify(raw[key]);
       return env;
     }, {}),
+    __DEV__: true,
+    SharedArrayBuffer: true,
+    spyOnDev: true,
+    spyOnDevAndProd: true,
+    spyOnProd: true,
+    __PROFILE__: true,
+    __UMD__: true,
+    __EXPERIMENTAL__: true,
+    __VARIANT__: true,
+    gate: true,
+    trustedTypes: true
   };
 
-  return { raw, stringified };
+  return {
+    raw,
+    stringified
+  };
 }
 
 module.exports = getClientEnvironment;

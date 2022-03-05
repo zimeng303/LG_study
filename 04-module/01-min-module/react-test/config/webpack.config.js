@@ -85,6 +85,10 @@ const hasJsxRuntime = (() => {
   }
 })();
 
+console.log('====================================');
+console.log(path.resolve(__dirname, "../src/react/packages/react"));
+console.log('====================================');
+
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
 module.exports = function (webpackEnv) {
@@ -312,11 +316,11 @@ module.exports = function (webpackEnv) {
         // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
         'react-native': 'react-native-web',
         // Allows for better profiling with ReactDevTools
-        ...(isEnvProductionProfile && {
-          'react-dom$': 'react-dom/profiling',
-          'scheduler/tracing': 'scheduler/tracing-profiling',
-        }),
-        ...(modules.webpackAliases || {}),
+        "react": path.resolve(__dirname, "../src/react/packages/react"),
+        "react-dom": path.resolve(__dirname, "../src/react/packages/react-dom"),
+        "shared": path.resolve(__dirname, "../src/react/packages/shared"),
+        "react-reconciler": path.resolve(__dirname, "../src/react/packages/react-reconciler"),
+        "legacy-events": path.resolve(__dirname, "../src/react/packages/legacy-events")
       },
       plugins: [
         // Prevents users from importing files from outside of src/ (or node_modules/).
@@ -419,6 +423,7 @@ module.exports = function (webpackEnv) {
                 ],
                 
                 plugins: [
+                  require.resolve("@babel/plugin-transform-flow-strip-types"),
                   isEnvDevelopment &&
                     shouldUseReactRefresh &&
                     require.resolve('react-refresh/babel'),

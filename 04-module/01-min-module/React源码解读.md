@@ -1,4 +1,4 @@
-配置 React 源码本地调试环境
+## 1. 配置 React 源码本地调试环境)
 
 1. 使用 create-react-app 脚手架创建项目
 
@@ -170,11 +170,37 @@
 
 > 删除 node_modules 文件夹，执行 **`npm install`**
 
-16. 建议
+16. 注意
 
-> 创建项目后，如果 react 版本为 17.x.x，建议将版本降到 16.x.x，具体版本如下：
->
-> ![image-20220303193951760](F:\LaGou\04-module\01-min-module\assets\3.png)
+    * 1，在执行 `npm start` 之后，有可能会报出错误，如下图所示：
+
+      ![image-20220305210524126](F:\LaGou\04-module\01-min-module\assets\error02.png)
+
+      **解决方案：**
+
+      找到 `./src/react/packages/react-reconciler/src/ReactFiberWorkLoop.new.js` 文件，修改以下代码，即可解决上述问题
+
+      ```javascript
+      - import * as Scheduler from 'scheduler';
+      + import Scheduler from 'scheduler';
+      ```
+
+      出现这种问题的可能不只是这一个文件，解决方法同上
+
+    * 2，在执行 `npm start` 之后，有可能会报出缺少依赖错误，如下图所示：
+
+      ![在这里插入图片描述](F:\LaGou\04-module\01-min-module\assets\error03.png)
+
+      **解决方案：**
+
+      先尝试使用 `npm` 安装此依赖，如果使用此种方式安装失败，建议使用 `yarn` 进行依赖的安装
+
+      ```powershell
+       # 方案一，不一定成功
+       npm i eslint-plugin-react-internal
+       # 方案二，建议选择此方案
+       yarn add eslint-plugin-react-internal
+      ```
 
 ## 2. 创建 React 元素
 
