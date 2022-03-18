@@ -579,7 +579,7 @@ Scheduler 存储在 `packages/scheduler` 文件夹中。
 
 ### 3.2 Reconciler 协调层
 
-在 React 15 的版本中，协调器和渲染器交替执行，即找到了差异就直接更新差异。在 React 16 的版本中，这种情况发生了变化，协调器和渲染器不再交替执行。协调器负责找出差异，在所有差异找出之后，统一交给渲染器进行 DOM 的更新。也就是说协调器的主要任务就是找出差异部分，并为差异打上标记。
+在 React 15 的版本中，协调器和渲染器交替执行，即找到了差异就直接更新差异。在 React 16 的版本中，这种情况发生了变化，协调器和渲染器不再交替执行。协调器负责找出差异，在所有差异找出之后，统一交给渲染器进行 DOM 的更新。也就是说协调器的主要任务就是**找出差异部分，并为差异打上标记**。
 
 ### 3.3 Renderer 渲染层
 
@@ -587,7 +587,7 @@ Scheduler 存储在 `packages/scheduler` 文件夹中。
 
 既然比对的过程从递归变成了可以中断的循环，那么 React 是如何解决中断更新时 DOM 渲染不完全的问题呢？
 
-其实根本就不存在这个问题，因为在整个过程中，调度器和协调器的工作是在内存中完成的是可以被打断的，渲染器的工作被设定成不可以被打断，所以不存在DOM 渲染不完全的问题。
+其实根本就不存在这个问题，因为在整个过程中，**调度器和协调器的工作是在内存中完成的是可以被打断的，渲染器的工作被设定成不可以被打断，**所以不存在DOM 渲染不完全的问题。
 
 ## 4. 数据结构
 
@@ -653,7 +653,7 @@ type Fiber = {
   // 任务的过期时间
   expirationTime: ExpirationTime,
   
-	// 当前组件及子组件处于何种渲染模式 详见 TypeOfMode
+  // 当前组件及子组件处于何种渲染模式 详见 TypeOfMode
   mode: TypeOfMode,
 };
 ```
@@ -820,9 +820,11 @@ export const ConcurrentRoot = 2;
 
 什么是双缓存？举个例子，使用 canvas 绘制动画时，在绘制每一帧前都会清除上一帧的画面，清除上一帧需要花费时间，如果当前帧画面计算量又比较大，又需要花费比较长的时间，这就导致上一帧清除到下一帧显示中间会有较长的间隙，就会出现白屏。
 
-为了解决这个问题，我们可以在内存中绘制当前帧动画，绘制完毕后直接用当前帧替换上一帧画面，这样的话在帧画面替换的过程中就会节约非常多的时间，就不会出现白屏问题。这种在内存中构建并直接替换的技术叫做双缓存。
+为了解决这个问题，我们可以在内存中绘制当前帧动画，绘制完毕后直接用当前帧替换上一帧画面，这样的话在帧画面替换的过程中就会节约非常多的时间，就不会出现白屏问题。这种在内存中构建并直接替换的技术叫做**双缓存**。
 
 React 使用双缓存技术完成 Fiber 树的构建与替换，实现DOM对象的快速更新。
+
+**实现思路**
 
 在 React 中最多会同时存在两棵 Fiber 树，当前在屏幕中显示的内容对应的 Fiber 树叫做 current Fiber 树，当发生更新时，React 会在内存中重新构建一颗新的 Fiber 树，这颗正在构建的 Fiber 树叫做 workInProgress Fiber 树。在双缓存技术中，workInProgress Fiber 树就是即将要显示在页面中的 Fiber 树，当这颗 Fiber 树构建完成后，React 会使用它直接替换 current Fiber 树达到快速更新 DOM 的目的，因为 workInProgress Fiber 树是在内存中构建的所以构建它的速度是非常快的。
 
@@ -830,9 +832,9 @@ React 使用双缓存技术完成 Fiber 树的构建与替换，实现DOM对象�
 
 在 current Fiber 节点对象中有一个 alternate 属性指向对应的 workInProgress Fiber 节点对象，在 workInProgress Fiber 节点中有一个 alternate 属性也指向对应的 current Fiber 节点对象。
 
-<img src="./images/3.png" width="40%"/>
+<img src="F:\LaGou\04-module\01-min-module\assets\4.png" alt="image-20220307100007866" style="zoom:50%;" />
 
-<img src="./images/4.png" width="40%"/>
+<img src="F:\LaGou\04-module\01-min-module\assets\5.png" alt="image-20220307100203901" style="zoom:50%;" />
 
 ### 4.8 区分 fiberRoot 与 rootFiber
 
@@ -848,7 +850,7 @@ rootFiber 指向 fiberRoot，在 rootFiber 对象中有一个 stateNode 属性�
 
 fiberRoot 会记录应用的更新信息，比如协调器在完成工作后，会将工作成果存储在 fiberRoot 中。
 
-<img src="./images/7.png" width="90%" align="left"/>
+![image-20220307100317037](F:\LaGou\04-module\01-min-module\assets\6.png)
 
 ## 5. 初始化渲染
 
@@ -886,7 +888,9 @@ export function render(
   return legacyRenderSubtreeIntoContainer(
     // 父组件 初始渲染没有父组件 传递 null 占位
     null,
+    // 要渲染的ReactElement元素
     element,
+    // 要渲染的目标容器
     container,
     // 是否为服务器端渲染 false 不是服务器端渲染 true 是服务器端渲染
     false,
@@ -906,7 +910,7 @@ export function render(
  * 2. node 可以是 document 节点
  * 3. node 可以是 文档碎片节点
  * 4. node 可以是注释节点但注释内容必须是 react-mount-point-unstable
- * 		react 内部会找到注释节点的父级 通过调用父级元素的 insertBefore 方法, 将 element 插入到注释节点的前面
+ * 	  react 内部会找到注释节点的父级 通过调用父级元素的 insertBefore 方法, 将 element 插入到注释节点的前面
  */
 export function isValidContainer(node: mixed): boolean {
   return !!(
@@ -1091,6 +1095,7 @@ export function createLegacyRoot(
 
 ```react
 /**
+ * 创建 ReactDOMBlockingRoot 的类
  * 类, 通过它可以创建 LegacyRoot 的 Fiber 数据结构
  */
 function ReactDOMBlockingRoot(
@@ -1127,7 +1132,7 @@ function createRootImpl(
 
 ##### 5.1.3.5 createContainer
 
-`文件位置: packages/react-reconciler/src/ReactFiberReconciler.js`
+`文件位置: packages/react-reconciler/src/ReactFiberReconciler.new.js`
 
 ```react
 // 创建 container
@@ -1217,6 +1222,7 @@ function FiberRootNode(containerInfo, tag, hydrate) {
 
 ```react
 export function initializeUpdateQueue<State>(fiber: Fiber): void {
+  // 上一次更新之后的 state，作为下一次更新的基础
   const queue: UpdateQueue<State> = {
     baseState: fiber.memoizedState,
     baseQueue: null,
@@ -1283,9 +1289,10 @@ export function getPublicInstance(instance: Instance): * {
 /**
  * 计算任务的过期时间
  * 再根据任务过期时间创建 Update 任务
+ * 通过任务的过期时间还可以计算出任务的优先级
  */
 export function updateContainer(
-	// element 要渲染的 ReactElement
+  // element 要渲染的 ReactElement
   element: ReactNodeList,
   // container Fiber Root 对象
   container: OpaqueRoot,
@@ -1336,6 +1343,7 @@ export function updateContainer(
     update.callback = callback;
   }
   // 将 update 对象加入到当前 Fiber 的更新队列当中 (updateQueue)
+  // 待执行的任务都会被存储在 fiber.updateQueue.shared.pending 中
   enqueueUpdate(current, update);
   // 调度和更新 current 对象
   scheduleWork(current, expirationTime);
@@ -1555,6 +1563,7 @@ export function createWorkInProgress(current: Fiber, pendingProps: any): Fiber {
 
 ```react
 // 以同步的方式构建 workInProgress Fiber 对象
+// 构建除 rootFiber 以外的所有子级 Fiber 对象
 function workLoopSync() {
   // workInProgress 是一个 fiber 对象
   // 它的值不为 null 意味着该 fiber 对象上仍然有更新要执行
@@ -1569,6 +1578,7 @@ function workLoopSync() {
 `文件位置: packages/react-reconciler/src/ReactFiberWorkLoop.js`
 
 ```react
+// 构建 Fiber 对象
 function performUnitOfWork(unitOfWork: Fiber): Fiber | null {
   // unitOfWork => workInProgress Fiber 树中的 rootFiber
   // current => currentFiber 树中的 rootFiber
@@ -1682,6 +1692,7 @@ function beginWork(
 `文件位置: packages/react-reconciler/src/ReactFiberBeginWork.js`
 
 ```react
+// 更新 hostRoot
 // HostRoot => <div id="root"></div> 对应的 Fiber 对象
 // 找出 HostRoot 的子 ReactElement 并为其构建 Fiber 对象
 function updateHostRoot(current, workInProgress, renderExpirationTime) {
@@ -1728,6 +1739,7 @@ function updateHostRoot(current, workInProgress, renderExpirationTime) {
 `文件位置: packages/react-reconciler/src/ReactFiberBeginWork.js`
 
 ```react
+// 构建子级 Fiber 对象
 export function reconcileChildren(
   // 旧 Fiber
   current: Fiber | null,
@@ -1886,6 +1898,7 @@ function ChildReconciler(shouldTrackSideEffects) {
     // 返回创建好的 Fiber 对象
     return created;
   }
+    
   // 处理子元素是单个对象的情况
   function reconcileSingleElement(
     // 父 Fiber 对象
