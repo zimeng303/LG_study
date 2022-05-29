@@ -164,7 +164,7 @@
 
     > Settings > Extensions > Prettier > Prettier path
     >
-    > <img src="C:\Users\86135\AppData\Roaming\Typora\typora-user-images\image-20220303155055561.png" alt="image-20220303155055561" style="zoom:50%;" />
+    > <img src="F:\LaGou\04-module\01-min-module\assets\7.png" alt="image-20220303155055561" style="zoom:50%;" />
 
 15. \_\_DEV\_\_ 报错
 
